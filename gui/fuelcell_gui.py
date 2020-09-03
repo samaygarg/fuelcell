@@ -1964,11 +1964,11 @@ class FuelcellUI(QTabWidget):
 			self.update_status('ERROR: ' + str(e))
 
 	def loaddata_action_tafel(self):
-		# try:
-		self.vishandler.load_tafel()
-		self.draw_plot_tafel()
-		# except Exception as e:
-		# 	self.update_status('ERROR: ' + str(e))
+		try:
+			self.vishandler.load_tafel()
+			self.draw_plot_tafel()
+		except Exception as e:
+			self.update_status('ERROR: ' + str(e))
 
 	def xcol_action_tafel(self):
 		col = self.xcol_txtbx_tafel.text()
@@ -2450,11 +2450,11 @@ class FuelcellUI(QTabWidget):
 			self.update_status('ERROR: ' + str(e))
 
 	def loaddata_action_eis(self):
-		# try:
-		self.vishandler.load_eis()
-		self.draw_plot_eis()
-		# except Exception as e:
-		# 	self.update_status('ERROR: ' + str(e))
+		try:
+			self.vishandler.load_eis()
+			self.draw_plot_eis()
+		except Exception as e:
+			self.update_status('ERROR: ' + str(e))
 
 	def xcol_action_eis(self):
 		col = self.xcol_txtbx_eis.text()
