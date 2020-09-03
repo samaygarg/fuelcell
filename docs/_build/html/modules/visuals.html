@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,12 +11,18 @@
   
 
   
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -29,10 +34,6 @@
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="prev" title="fuelcell.utils" href="utils.html" /> 
@@ -49,7 +50,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> fuelcell
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> fuelcell
           
 
           
@@ -72,6 +73,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -93,6 +95,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -131,7 +134,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="index.html">Modules</a> &raquo;</li>
         
@@ -157,213 +160,7 @@
   <div class="section" id="fuelcell-visuals">
 <h1>fuelcell.visuals<a class="headerlink" href="#fuelcell-visuals" title="Permalink to this headline">¶</a></h1>
 <p>Data visualization methods</p>
-<span class="target" id="module-fuelcell.visuals"></span><dl class="function">
-<dt id="fuelcell.visuals.build_axlabel">
-<code class="sig-prename descclassname">fuelcell.visuals.</code><code class="sig-name descname">build_axlabel</code><span class="sig-paren">(</span><em class="sig-param">base</em>, <em class="sig-param">units</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.visuals.build_axlabel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate axis label</p>
-<p>Auxilliary function to generate an axis label from the specified name and units:
-‘Base [units]’</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>base</strong> (<em>str</em>) – Axis name</p></li>
-<li><p><strong>units</strong> (<em>str</em>) – Axis units</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Complete axis label</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>label</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="fuelcell.visuals.check_errs">
-<code class="sig-prename descclassname">fuelcell.visuals.</code><code class="sig-name descname">check_errs</code><span class="sig-paren">(</span><em class="sig-param">errs</em>, <em class="sig-param">df</em>, <em class="sig-param">err_name</em>, <em class="sig-param">err_col</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.visuals.check_errs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if data set contains error data and return valid error data</p>
-<p>Auxilliary function to check if the given data set contains data that can be used to draw error bars. Returns the error values if possible, otherwise returns an array of zeros.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>errs</strong> (<em>bool</em>) – Whether data set should be checked for error data. If False, an array of zeros is returned.</p></li>
-<li><p><strong>df</strong> (<em>DataFrame</em>) – DataFrame that should contain error data</p></li>
-<li><p><strong>err_name</strong> (<em>str</em>) – String of the form ‘[datatype]_std’ (ex: ‘current_std’). Used to parse column labels of df</p></li>
-<li><p><strong>err_col</strong> (<em>int</em><em> or </em><em>str</em>) – Index or label of the column containing data to draw error bars. Used only if automatic column identification fails. Ignored if errs=False</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>err</strong> – Array of values which can be used to draw error bars. If valid error values could not be found, an array of zeros of the same length as df is returned</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>numpy array</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="fuelcell.visuals.check_labels">
-<code class="sig-prename descclassname">fuelcell.visuals.</code><code class="sig-name descname">check_labels</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">labels=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.visuals.check_labels" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if the specified labels are valid</p>
-<p>Auxilliary functin to checks if the user-specified labels can be used to create the legend. If unspecified or lengths of data and labels are mismatched, dict keys of data are used as default labels.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<em>dict</em>) – Dict with data to be plotted as values</p></li>
-<li><p><strong>labels</strong> (<em>list-like</em>) – List of labels to be used in the legend. If unspecified, keys of data are used as labels.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Valid list of labels for use in the legend</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>labels</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="fuelcell.visuals.fig_saver">
-<code class="sig-prename descclassname">fuelcell.visuals.</code><code class="sig-name descname">fig_saver</code><span class="sig-paren">(</span><em class="sig-param">export_name</em>, <em class="sig-param">export_type='png'</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.visuals.fig_saver" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save the current figure</p>
-<p>Auxilliary function to save the current figure as an image.</p>
-<dl class="simple">
-<dt>export_name: str, path object, or file-like</dt><dd><p>File name to save the image as. Can either be a complete file path to save the image in a specific directory or a file name to save the image in the current directory</p>
-</dd>
-<dt>export_type: str (default=’png’)</dt><dd><p>File type to save the image as. Only used if export_name does not include the file type</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="fuelcell.visuals.plot_cp_raw">
-<code class="sig-prename descclassname">fuelcell.visuals.</code><code class="sig-name descname">plot_cp_raw</code><span class="sig-paren">(</span><em class="sig-param">data=None</em>, <em class="sig-param">labels=None</em>, <em class="sig-param">line=False</em>, <em class="sig-param">scatter=True</em>, <em class="sig-param">errs=False</em>, <em class="sig-param">current_column=2</em>, <em class="sig-param">potential_column=1</em>, <em class="sig-param">time_column=0</em>, <em class="sig-param">err_column=(4</em>, <em class="sig-param">5)</em>, <em class="sig-param">xunits='s'</em>, <em class="sig-param">yunits=('mA'</em>, <em class="sig-param">'V')</em>, <em class="sig-param">export_name=None</em>, <em class="sig-param">export_type='png'</em>, <em class="sig-param">fig_kw={}</em>, <em class="sig-param">err_kw={}</em>, <em class="sig-param">**plot_kw</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.visuals.plot_cp_raw" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot raw chronopotentiometry data</p>
-<p>Note: it is strongly reccomended to use this function with data from only a single test and the default values of line, scatter, and errs to avoid overplotting.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<em>DataFrame</em><em> or </em><em>dict</em><em> (</em><em>default=None</em><em>)</em>) – Either a DataFrame containing CP data or a dict with DataFrames of CP data as values. Designed to be used seamlessly with the output of data.cp_raw</p></li>
-<li><p><strong>labels</strong> (<em>array-like</em><em> (</em><em>default=None</em><em>)</em>) – List of labels to be used in the legend. If unspecified, keys of data are used as labels.</p></li>
-<li><p><strong>line</strong> (<em>bool</em><em> (</em><em>default=True</em><em>)</em>) – Whether to draw a line connecting the individual data points</p></li>
-<li><p><strong>scatter</strong> (<em>bool</em><em> (</em><em>default=False</em><em>)</em>) – Whether to draw a marker at each data point</p></li>
-<li><p><strong>errs</strong> (<em>bool</em><em> (</em><em>default=False</em><em>)</em>) – Whether to include an error bar at each data point</p></li>
-<li><p><strong>current_column</strong> (<em>int</em><em> or </em><em>str</em><em> (</em><em>default=2</em><em>)</em>) – Index or label of the column containing current data. Used only if automatic column identification fails</p></li>
-<li><p><strong>potential_column</strong> (<em>int</em><em> or </em><em>str</em><em> (</em><em>default=1</em><em>)</em>) – Index or label of the column containing potential data. Used only if automatic column identification fails</p></li>
-<li><p><strong>time_column</strong> (<em>int</em><em> or </em><em>str</em><em> (</em><em>default=0</em><em>)</em>) – Index or label of the column containing time data. Used only if automatic column identification fails</p></li>
-<li><p><strong>err_column</strong> (<em>tuple</em><em> or </em><em>list of int</em><em> or </em><em>str</em><em> (</em><em>default=</em><em>(</em><em>4</em><em>,</em><em>5</em><em>)</em><em>)</em>) – Indices or labels of the columns containing data to draw error bars. Used only if automatic column identification fails. Ignored if errs=False</p></li>
-<li><p><strong>xunits</strong> (<em>str</em><em> (</em><em>default=r'$mA/cm^2$'</em><em>)</em>) – Units of the x-axis</p></li>
-<li><p><strong>yunits</strong> (<em>tuple</em><em> or </em><em>list of str</em><em> (</em><em>default=</em><em>(</em><em>'ma'</em><em>,</em><em>'V'</em><em>)</em><em>)</em>) – Units of the y-axis</p></li>
-<li><p><strong>export_name</strong> (<em>str</em><em>, </em><em>path object</em><em>, or </em><em>file-like</em><em> (</em><em>default=None</em><em>)</em>) – If specified, the figure will be saved as an image. Can either be a complete file path to save the image in a specific directory or a file name to save the image in the current directory</p></li>
-<li><p><strong>export_type</strong> (<em>str</em><em> (</em><em>default='png'</em><em>)</em>) – File type to save the image as. Only used if export_name is specified and export_name does not include the file type</p></li>
-<li><p><strong>fig_kw</strong> (<em>dict</em>) – Dict with keywords passed to the plt.subplots function to create the figure</p></li>
-<li><p><strong>err_kw</strong> (<em>dict</em>) – Dict with keywords passed to the plt.errorbars function used to draw errorbars</p></li>
-<li><p><strong>**plot_kw</strong> – all remaining keyword arguments are passed to the plt.plot or plt.scatter function used to draw the graphs</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>fig</strong> (<em>Figure</em>) – Figure object containing all plot elements</p></li>
-<li><p><strong>ax</strong> (<em>Tuple</em>) – Tuple of axes objects containing the plotted data</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="fuelcell.visuals.plot_cv">
-<code class="sig-prename descclassname">fuelcell.visuals.</code><code class="sig-name descname">plot_cv</code><span class="sig-paren">(</span><em class="sig-param">data=None</em>, <em class="sig-param">labels=None</em>, <em class="sig-param">line=True</em>, <em class="sig-param">scatter=False</em>, <em class="sig-param">errs=False</em>, <em class="sig-param">current_column=1</em>, <em class="sig-param">potential_column=0</em>, <em class="sig-param">err_column=3</em>, <em class="sig-param">xunits='V'</em>, <em class="sig-param">yunits='$mA/cm^2$'</em>, <em class="sig-param">export_name=None</em>, <em class="sig-param">export_type='png'</em>, <em class="sig-param">fig_kw={}</em>, <em class="sig-param">err_kw={}</em>, <em class="sig-param">**plot_kw</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.visuals.plot_cv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot cyclic voltammetry data</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<em>DataFrame</em><em> or </em><em>dict</em><em> (</em><em>default=None</em><em>)</em>) – Either a DataFrame containing CV data or a dict with DataFrames of CV data as values. Designed to be used seamlessly with the output of data.cv_process</p></li>
-<li><p><strong>labels</strong> (<em>array-like</em><em> (</em><em>default=None</em><em>)</em>) – List of labels to be used in the legend. If unspecified, keys of data are used as labels.</p></li>
-<li><p><strong>line</strong> (<em>bool</em><em> (</em><em>default=True</em><em>)</em>) – Whether to draw a line connecting the individual data points</p></li>
-<li><p><strong>scatter</strong> (<em>bool</em><em> (</em><em>default=False</em><em>)</em>) – Whether to draw a marker at each data point</p></li>
-<li><p><strong>errs</strong> (<em>bool</em><em> (</em><em>default=False</em><em>)</em>) – Whether to include an error bar at each data point</p></li>
-<li><p><strong>current_column</strong> (<em>int</em><em> or </em><em>str</em><em> (</em><em>default=1</em><em>)</em>) – Index or label of the column containing current data. Used only if automatic column identification fails</p></li>
-<li><p><strong>potential_column</strong> (<em>int</em><em> or </em><em>str</em><em> (</em><em>default=0</em><em>)</em>) – Index or label of the column containing potential data. Used only if automatic column identification fails</p></li>
-<li><p><strong>err_column</strong> (<em>int</em><em> or </em><em>str</em><em> (</em><em>default=3</em><em>)</em>) – Index or label of the column containing data to draw error bars. Used only if automatic column identification fails. Ignored if errs=False</p></li>
-<li><p><strong>xunits</strong> (<em>str</em><em> (</em><em>default='V'</em><em>)</em>) – Units of the x-axis</p></li>
-<li><p><strong>yunits</strong> (<em>str</em><em> (</em><em>default=r'$mA/cm^2$'</em><em>)</em>) – Units of the y-axis</p></li>
-<li><p><strong>export_name</strong> (<em>str</em><em>, </em><em>path object</em><em>, or </em><em>file-like</em><em> (</em><em>default=None</em><em>)</em>) – If specified, the figure will be saved as an image. Can either be a complete file path to save the image in a specific directory or a file name to save the image in the current directory</p></li>
-<li><p><strong>export_type</strong> (<em>str</em><em> (</em><em>default='png'</em><em>)</em>) – File type to save the image as. Only used if export_name is specified and export_name does not include the file type</p></li>
-<li><p><strong>fig_kw</strong> (<em>dict</em>) – Dict with keywords passed to the plt.subplots function to create the figure</p></li>
-<li><p><strong>err_kw</strong> (<em>dict</em>) – Dict with keywords passed to the plt.errorbars function used to draw errorbars</p></li>
-<li><p><strong>**plot_kw</strong> – all remaining keyword arguments are passed to the plt.plot or plt.scatter function used to draw the graphs</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>fig</strong> (<em>Figure</em>) – Figure object containing all plot elements</p></li>
-<li><p><strong>ax</strong> (<em>Axes</em>) – Axes object containing the plotted data</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="fuelcell.visuals.plotter">
-<code class="sig-prename descclassname">fuelcell.visuals.</code><code class="sig-name descname">plotter</code><span class="sig-paren">(</span><em class="sig-param">ax</em>, <em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">e</em>, <em class="sig-param">l</em>, <em class="sig-param">line</em>, <em class="sig-param">scatter</em>, <em class="sig-param">errs</em>, <em class="sig-param">err_kw</em>, <em class="sig-param">**plot_kw</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.visuals.plotter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot data</p>
-<p>Auxilliary function to plot the specified data</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ax</strong> (<em>Axes</em>) – Axes object on which to plot the data</p></li>
-<li><p><strong>x</strong> (<em>array-like</em>) – x values</p></li>
-<li><p><strong>y</strong> (<em>array-like</em>) – y values</p></li>
-<li><p><strong>e</strong> (<em>array-like</em>) – Error values used to draw error bars</p></li>
-<li><p><strong>l</strong> (<em>array-like</em>) – Labels to be used in the legend</p></li>
-<li><p><strong>line</strong> (<em>bool</em>) – Whether to draw a line connecting the individual data points</p></li>
-<li><p><strong>scatter</strong> (<em>bool</em>) – Whether to draw a marker at each data point</p></li>
-<li><p><strong>errs</strong> (<em>bool</em>) – Whether to include an error bar at each data point</p></li>
-<li><p><strong>err_kw</strong> (<em>dict</em>) – Dict with keywords passed to the plt.errorbars function used to draw errorbars</p></li>
-<li><p><strong>**plot_kw</strong> – all remaining keyword arguments are passed to the plt.plot or plt.scatter function used to draw the graphs</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="fuelcell.visuals.polcurve">
-<code class="sig-prename descclassname">fuelcell.visuals.</code><code class="sig-name descname">polcurve</code><span class="sig-paren">(</span><em class="sig-param">data=None</em>, <em class="sig-param">labels=None</em>, <em class="sig-param">line=True</em>, <em class="sig-param">scatter=True</em>, <em class="sig-param">errs=False</em>, <em class="sig-param">current_column=0</em>, <em class="sig-param">potential_column=1</em>, <em class="sig-param">err_column=3</em>, <em class="sig-param">xunits='$mA/cm^2$'</em>, <em class="sig-param">yunits='V'</em>, <em class="sig-param">export_name=None</em>, <em class="sig-param">export_type='png'</em>, <em class="sig-param">fig_kw={}</em>, <em class="sig-param">err_kw={}</em>, <em class="sig-param">**plot_kw</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.visuals.polcurve" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot polarization curves using chronopotentiometry data</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<em>DataFrame</em><em> or </em><em>dict</em><em> (</em><em>default=None</em><em>)</em>) – Either a DataFrame containing CP data or a dict with DataFrames of CP data as values. Designed to be used seamlessly with the output of data.cp_process</p></li>
-<li><p><strong>labels</strong> (<em>array-like</em><em> (</em><em>default=None</em><em>)</em>) – List of labels to be used in the legend. If unspecified, keys of data are used as labels.</p></li>
-<li><p><strong>line</strong> (<em>bool</em><em> (</em><em>default=True</em><em>)</em>) – Whether to draw a line connecting the individual data points</p></li>
-<li><p><strong>scatter</strong> (<em>bool</em><em> (</em><em>default=False</em><em>)</em>) – Whether to draw a marker at each data point</p></li>
-<li><p><strong>errs</strong> (<em>bool</em><em> (</em><em>default=False</em><em>)</em>) – Whether to include an error bar at each data point</p></li>
-<li><p><strong>current_column</strong> (<em>int</em><em> or </em><em>str</em><em> (</em><em>default=0</em><em>)</em>) – Index or label of the column containing current data. Used only if automatic column identification fails</p></li>
-<li><p><strong>potential_column</strong> (<em>int</em><em> or </em><em>str</em><em> (</em><em>default=1</em><em>)</em>) – Index or label of the column containing potential data. Used only if automatic column identification fails</p></li>
-<li><p><strong>err_column</strong> (<em>int</em><em> or </em><em>str</em><em> (</em><em>default=3</em><em>)</em>) – Index or label of the column containing data to draw error bars. Used only if automatic column identification fails. Ignored if errs=False</p></li>
-<li><p><strong>xunits</strong> (<em>str</em><em> (</em><em>default=r'$mA/cm^2$'</em><em>)</em>) – Units of the x-axis</p></li>
-<li><p><strong>yunits</strong> (<em>str</em><em> (</em><em>default='V'</em><em>)</em>) – Units of the y-axis</p></li>
-<li><p><strong>export_name</strong> (<em>str</em><em>, </em><em>path object</em><em>, or </em><em>file-like</em><em> (</em><em>default=None</em><em>)</em>) – If specified, the figure will be saved as an image. Can either be a complete file path to save the image in a specific directory or a file name to save the image in the current directory</p></li>
-<li><p><strong>export_type</strong> (<em>str</em><em> (</em><em>default='png'</em><em>)</em>) – File type to save the image as. Only used if export_name is specified and export_name does not include the file type</p></li>
-<li><p><strong>fig_kw</strong> (<em>dict</em>) – Dict with keywords passed to the plt.subplots function to create the figure</p></li>
-<li><p><strong>err_kw</strong> (<em>dict</em>) – Dict with keywords passed to the plt.errorbars function used to draw errorbars</p></li>
-<li><p><strong>**plot_kw</strong> – all remaining keyword arguments are passed to the plt.plot or plt.scatter function used to draw the graphs</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>fig</strong> (<em>Figure</em>) – Figure object containing all plot elements</p></li>
-<li><p><strong>ax</strong> (<em>Axes</em>) – Axes object containing the plotted data</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-</div>
+<span class="target" id="module-fuelcell.visuals"></span></div>
 
 
            </div>
@@ -383,11 +180,19 @@
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2020, Samay Garg
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -398,7 +203,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {
