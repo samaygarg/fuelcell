@@ -3,7 +3,7 @@ import pandas as pd
 import os
 import re
 import fuelcell as fc
-x = 1
+
 class Datum():
 	def __init__(self, name, data):
 		# data
