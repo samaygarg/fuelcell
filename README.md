@@ -1,27 +1,14 @@
 # fuelcell
 
-fuelcell is a Python library designed to streamline the process of analyzing data generated from experiments which are commonly used to test electrochemical devices.
+fuelcell is a Python library which can be used for electrochemical data analysis
 
-## Installation
+## Structure
 
-fuelcell can be installed via the command line using [pip](https://pypi.org/project/fuelcell/) 
-
-``` bash
-pip install fuelcell
-```
-
-# Documentation
-
-The fuelcell documentation can be found [here](https://fuelcell.readthedocs.io/en/latest/)
-
-## New in version 1.3
-
-* Added ability to save processed data to CSV or Excel file
-* Added docstrings
-* Added support for error calculations and error bar
-* Added reference electrode correction to `fc.cv_process` 
-* Updated visualization methods to improve pass-through to matplotlib
-* Bug fixes and minor improvements
+- `datums.py`: Data processing functions
+- `visuals.py`: Data visualization functions
+- `utils.py`: File handling functions
+- `model.py`: Objects to store electrochemical data along with associated features  and expereimental parameters
+- `fuelcell_gui.py`: Graphical user interface for interactive use
 
 ## License
 
