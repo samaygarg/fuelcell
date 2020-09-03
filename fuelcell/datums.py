@@ -4,7 +4,7 @@ from scipy import stats
 from scipy.optimize import curve_fit
 import os
 import re
-
+x = 1
 from fuelcell import utils
 from fuelcell.model import Datum
 
