@@ -20,7 +20,7 @@ setuptools.setup(
   keywords = ['electrochemistry', 'fuel cell', 'electrolyzer'],
   packages=setuptools.find_packages(),
   python_requires='>=3',
-  install_requires=['numpy', 'pandas', 'matplotlib', 'scipy', 'PySide2', 'PyQT5'],
+  install_requires=['numpy', 'pandas', 'matplotlib', 'scipy', 'PySide2', 'PyQT5', 'emn_sdk'],
   project_urls={
     'Documentation': 'https://fuelcell.readthedocs.io/en/latest/',
     'Source': 'https://github.com/samaygarg/fuelcell'
