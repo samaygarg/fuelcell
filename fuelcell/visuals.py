@@ -14,6 +14,7 @@ logging.basicConfig(format=_log_fmt)
 # _log.setFormatter(_log_fmt)
 logging.getLogger('matplotlib.font_manager').disabled = True
 
+### plotting functions ###
 def plot_cv(data=None, use_all=False, fig=None, ax=None, labels=None, line=True, scatter=False, errs=False, current_column=1, potential_column=0, err_column=3, xunits='V', yunits=r'$mA/cm^2$', export_name=None, export_type='png', fig_kw={}, err_kw={}, **plot_kw):
 	if data is None:
 		return None
@@ -218,39 +219,8 @@ def plot_hfr(data=None, fig=None, ax=None):
 	# ax.set_xbound(upper=1.1*max(x))
 	# ax.set_ybound(upper=1.1*max(y))
 	return fig, ax
- 
-def build_axlabel(base, units):
-	label = base
-	if units:
-		label =  label + ' [' + units + ']'
-	return label
 
-def check_errs(errs, df, err_name, err_col):
-	count = df.shape[0]
-	if errs:
-		try:
-			err = datums.find_col(df, err_name, err_col)
-		except:
-			err = np.zeros(count)
-			_log.warning('Unable to use the specified error values')
-	else:
-		err = np.zeros(count)
-	return err
-
-# def check_labels(data, labels=None):
-# 	if labels and (len(labels) != len(data)):
-# 		labels = list(data.keys())
-# 		_log.warning('labels and data must have the same length. Using default labels instead of specified labels')
-# 	elif labels is None:
-# 		labels = list(data.keys())
-# 	return labels
-
-def fig_saver(export_name, export_type='png'):
-	if '.' not in export_name:
-		export_type = export_type.replace('.','')
-		export_name = export_name + '.' + export_type
-	plt.savefig(export_name, bbox_inches='tight')
-
+### base plotting function ###
 def plotter(ax, x, y, e, l, line, scatter, errs, err_kw, **plot_kw):
 	actual_line = None
 	actual_caps = None
@@ -283,3 +253,31 @@ def plotter(ax, x, y, e, l, line, scatter, errs, err_kw, **plot_kw):
 			actual_line = ax.plot(x, y, label=l, **plot_kw)
 		actual_line = actual_line[0]
 	return actual_line, actual_caps, actual_bars
+ 
+### generate an axis label from the specified name and units ###
+def build_axlabel(base, units):
+	label = base
+	if units:
+		label =  label + ' [' + units + ']'
+	return label
+
+### validation of error values ###
+def check_errs(errs, df, err_name, err_col):
+	count = df.shape[0]
+	if errs:
+		try:
+			err = datums.find_col(df, err_name, err_col)
+		except:
+			err = np.zeros(count)
+			_log.warning('Unable to use the specified error values')
+	else:
+		err = np.zeros(count)
+	return err
+
+### auxilliary function to export figures ###
+def fig_saver(export_name, export_type='png'):
+	if '.' not in export_name:
+		export_type = export_type.replace('.','')
+		export_name = export_name + '.' + export_type
+	plt.savefig(export_name, bbox_inches='tight')
+

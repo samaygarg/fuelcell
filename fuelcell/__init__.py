@@ -7,11 +7,7 @@ import re
 
 from fuelcell import datums
 from fuelcell import visuals
-# from fuelcell import utilsv2
-# from fuelcell import datumsv2
-# from fuelcell import visualsv2
+from fuelcell import utils
 
 from fuelcell.datums import *
 from fuelcell.visuals import *
-# from fuelcell.datumsv2 import *
-# from fuelcell.visualsv2 import *
