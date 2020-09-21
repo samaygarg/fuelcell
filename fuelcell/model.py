@@ -57,7 +57,9 @@ class Datum():
 		return self.label
 
 	def get_processed_data(self):
-		return self.processed_data
+		if self.processed_data is not None:
+			return self.processed_data.copy()
+		return None
 
 	def get_expt_type(self):
 		return self.expt_type
@@ -192,7 +194,6 @@ class Datum():
 
 	def set_lfr(self, new_val):
 		self.lfr = new_val
-
 
 	def set_line(self, new_val):
 		self.line = new_val
