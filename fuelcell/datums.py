@@ -15,6 +15,36 @@ ref_electrodes = {'she':0, 'sce':0.241}
 thermo_potentials = {'none':0, 'oer':1.23}
 expt_types_all = ['cv', 'cp', 'ca', 'lsv', 'eis']
 
+### functions to load raw data ###
+def load_data(filename=None, folder=None, pattern='', expt_type='', filetype='', delimiter=dlm_default):
+	data = []
+	if filename:
+		if type(filename) != list:
+			filename = [filename]
+		# for f in filename:
+		# 	data.append(utils.read_file(f, delimiter))
+	if folder:
+		dirpath = os.path.realpath(folder)
+	else:
+		dirpath = os.getcwd()
+	if expt_type and not pattern:
+		pattern = r'.*' + expt_type + r'.*'
+	files = utils.get_files(dirpath, pattern, filetype, filename)
+	for f in files:
+		path = os.path.join(dirpath, f)
+		this_data = utils.read_file(path, delimiter)
+		if expt_type:
+			this_data.set_expt_type(expt_type.lower())
+		else:
+			for this_type in expt_types_all:
+				pattern = r'.*' + this_type + r'.*'
+				if re.match(pattern, f):
+					this_data.set_expt_type(this_type.lower())
+					break
+		if this_data is not None:
+			data.append(this_data)
+	return data
+
 def ca_raw(filename=None, folder=None, pattern='', filetype='', delimiter=dlm_default):
 	data = load_data(filename, folder, pattern, 'ca', filetype, delimiter)
 	return data
@@ -35,6 +65,7 @@ def eis_raw(filename=None, folder=None, pattern='', filetype='', delimiter=dlm_d
 	data = load_data(filename, folder, pattern, 'eis', filetype, delimiter)
 	return data
 
+### high-level functions for processing data ###
 def ca_process(data=None, current_column=2, potential_column=1, area=5, reference='she', thermo_potential=0, export_data=False, save_dir='processed', threshold=5, min_step_length=50, pts_to_average=300, pyramid=False, **kwargs):
 	if data is None:
 		data = ca_raw(**kwargs)
@@ -156,138 +187,7 @@ def eis_process(data=None, real_column=0, imag_column=1, export_data=False, save
 				i += 1
 	return new_data
 
-def set_datum_params(data, area, ref, rxn):
-	data.set_area(area)
-	if ref in ref_electrodes.keys():
-		ref = ref_electrodes[ref]
-	data.set_refelec(ref)
-	if rxn in thermo_potentials.keys():
-		rxn = thermo_potentials[rxn]
-	data.set_thermo_potential(rxn)
-
-def split_at_zeros(xvals, yvals):
-	final_x, final_y = [], []
-	this_x, this_y = [], []
-	for r, i in zip(xvals, yvals):
-		if r!=0 or i!=0:
-			this_x.append(r)
-			this_y.append(i)
-		else:
-			if len(this_x) != 0:
-				final_x.append(this_x)
-				final_y.append(this_y)
-			this_x = []
-			this_y = []
-	if len(this_x) != 0:
-		final_x.append(this_x)
-		final_y.append(this_y)
-	return final_x, final_y
-
-def drop_neg(xvals, yvals):
-	final_x, final_y = [],[]
-	this_x, this_y = [],[]
-	for x, y in zip(xvals, yvals):
-		this_x = [i for i,j in zip(x,y) if i>=0 and j>=0]
-		this_y = [j for i,j in zip(x,y) if i>=0 and j>=0]
-		if len(this_x) != 0:
-			final_x.append(this_x)
-			final_y.append(this_y)
-	return final_x, final_y
-
-def fit_eis_semicircle(real, imag):
-	popt, pcov = curve_fit(semicircle, real, imag, maxfev=10000)
-	r = popt[0]
-	h = popt[1]
-	k = popt[2]
-	hfr = -1*np.sqrt(r**2 - k**2) + h
-	lfr = np.sqrt(r**2 - k**2) + h
-	return popt, hfr, lfr
-
-def fit_eis_linear(real, imag):
-	slopes = []
-	first_real, first_imag = real[0], imag[0]
-	for x, y in zip(real[1:], imag[1:]):
-		this_slope = np.abs((y-first_imag) / (x-first_real))
-		slopes.append(this_slope)
-	slopes = np.asarray(slopes)
-	idx = np.where(slopes >= 3)
-	real_trim, imag_trim = real[idx], imag[idx]
-	try:
-		m, b, _, _, _ = stats.linregress(real_trim, imag_trim)
-		popt = (m,b)
-		hfr = -b / m
-	except ValueError as e:
-		return None, None
-	return popt, hfr
-
-def semicircle(x, r, h, k):
-	x = np.asarray(x)
-	y = np.sqrt(r**2 - (x-h)**2) + k
-	return y
-
-def array_apply(arr, func, **kwargs):
-	result =  np.asarray([func(a, **kwargs) for a in arr])
-	return result
-
-def avg_last_pts(arr, numpts=300):
-	if type(arr) == list:
-		arr = np.asarray(arr)
-	avg = np.mean(arr[-numpts:])
-	return avg
-
-def find_col(data, col_type, label=None):
-	default_label = col_default_labels[col_type]
-	default_id = col_default_ids[col_type]
-	newdf = data.copy()
-	newdf.columns = utils.check_labels(newdf)
-	if default_label in newdf.columns:
-		col = newdf[default_label]
-	elif label:
-		if utils.check_str(label):
-			col = newdf[label]
-		else:
-			col = newdf.iloc[:,label]
-	else:
-		col = newdf.iloc[:, default_id]
-	col = np.asarray(col)
-	return col
-
-def find_steps(arr, threshold=5):
-	if type(arr) == list:
-		arr = np.asarray(arr)
-	diffs = np.abs(np.diff(arr))
-	splits = np.where(diffs > threshold)[0] + 1
-	return splits 
-
-def load_data(filename=None, folder=None, pattern='', expt_type='', filetype='', delimiter=dlm_default):
-	data = []
-	if filename:
-		if type(filename) != list:
-			filename = [filename]
-		# for f in filename:
-		# 	data.append(utils.read_file(f, delimiter))
-	if folder:
-		dirpath = os.path.realpath(folder)
-	else:
-		dirpath = os.getcwd()
-	if expt_type and not pattern:
-		pattern = r'.*' + expt_type + r'.*'
-	files = utils.get_files(dirpath, pattern, filetype, filename)
-	for f in files:
-		path = os.path.join(dirpath, f)
-		this_data = utils.read_file(path, delimiter)
-		if expt_type:
-			this_data.set_expt_type(expt_type.lower())
-		else:
-			for this_type in expt_types_all:
-				pattern = r'.*' + this_type + r'.*'
-				if re.match(pattern, f):
-					this_data.set_expt_type(this_type.lower())
-					break
-		if this_data is not None:
-			data.append(this_data)
-	return data
-
+### cp/ca analysis ###
 def process_steps(data, control_column=0, response_column=1, threshold=5, min_step_length=25, pts_to_average=300, pyramid=True, expt_type='cp', area=1, reference='she', thermo_potential=0):
 	if expt_type == 'ca':
 		control_var = 'potential'
@@ -351,6 +251,58 @@ def process_steps(data, control_column=0, response_column=1, threshold=5, min_st
 		processed = pd.DataFrame({'i':control_avg, 'v':response_avg, 'i_sd':control_std, 'v_sd':response_std, 'eta':overpotential})
 	return processed
 
+### tafel analysis ###
+def tafel_slope(log_curr, eta, min_curr=None, max_curr=None):
+	min_idx = 0
+	max_idx = len(log_curr)
+	if min_curr and min_curr >= min(log_curr):
+		min_idx = np.where(log_curr <= min_curr)[0][-1]
+	if max_curr and max_curr <= max(log_curr):
+		max_idx = np.where(log_curr >= max_curr)[0][0]
+	log_curr_trim = log_curr[min_idx:max_idx+1]
+	eta_trim = eta[min_idx:max_idx+1]
+	a, b, r, p, err = stats.linregress(log_curr_trim, eta_trim)
+	rsquare = r**2
+	exchg_curr = 10 ** (b / -a)
+	return a, exchg_curr, rsquare, log_curr_trim, eta_trim
+
+def tafel_eqn(log_curr, exchg_curr, slope):
+	eta = slope * (log_curr - np.log10(exchg_curr))
+	return eta
+
+### hfr analysis ###
+def fit_eis_semicircle(real, imag):
+	popt, pcov = curve_fit(semicircle, real, imag, maxfev=10000)
+	r = popt[0]
+	h = popt[1]
+	k = popt[2]
+	hfr = -1*np.sqrt(r**2 - k**2) + h
+	lfr = np.sqrt(r**2 - k**2) + h
+	return popt, hfr, lfr
+
+def fit_eis_linear(real, imag):
+	slopes = []
+	first_real, first_imag = real[0], imag[0]
+	for x, y in zip(real[1:], imag[1:]):
+		this_slope = np.abs((y-first_imag) / (x-first_real))
+		slopes.append(this_slope)
+	slopes = np.asarray(slopes)
+	idx = np.where(slopes >= 3)
+	real_trim, imag_trim = real[idx], imag[idx]
+	try:
+		m, b, _, _, _ = stats.linregress(real_trim, imag_trim)
+		popt = (m,b)
+		hfr = -b / m
+	except ValueError as e:
+		return None, None
+	return popt, hfr
+
+def semicircle(x, r, h, k):
+	x = np.asarray(x)
+	y = np.sqrt(r**2 - (x-h)**2) + k
+	return y
+
+### misc auxilliary functions ###
 def electrode_correct(arr, ref='she'):
 	if type(arr) == list:
 		arr = np.asarray(arr)
@@ -379,18 +331,71 @@ def overpotential_correct(arr, rxn=0):
 		corrected = corrected - rxn
 	return corrected
 
-def split_and_filter(arr, split_pts, min_length=0):
-	if type(arr) == list:
-		arr = np.asarray(arr)
-	steps = np.split(arr, split_pts)
-	steps = np.asarray([s for s in steps if len(s) > min_length])
-	return steps
+def find_col(data, col_type, label=None):
+	default_label = col_default_labels[col_type]
+	default_id = col_default_ids[col_type]
+	newdf = data.copy()
+	newdf.columns = utils.check_labels(newdf)
+	if default_label in newdf.columns:
+		col = newdf[default_label]
+	elif label:
+		if utils.check_str(label):
+			col = newdf[label]
+		else:
+			col = newdf.iloc[:,label]
+	else:
+		col = newdf.iloc[:, default_id]
+	col = np.asarray(col)
+	return col
 
-def std_agg(arr):
+### auxilliary array manipulation functions ###
+def set_datum_params(data, area, ref, rxn):
+	data.set_area(area)
+	if ref in ref_electrodes.keys():
+		ref = ref_electrodes[ref]
+	data.set_refelec(ref)
+	if rxn in thermo_potentials.keys():
+		rxn = thermo_potentials[rxn]
+	data.set_thermo_potential(rxn)
+
+def split_at_zeros(xvals, yvals):
+	final_x, final_y = [], []
+	this_x, this_y = [], []
+	for r, i in zip(xvals, yvals):
+		if r!=0 or i!=0:
+			this_x.append(r)
+			this_y.append(i)
+		else:
+			if len(this_x) != 0:
+				final_x.append(this_x)
+				final_y.append(this_y)
+			this_x = []
+			this_y = []
+	if len(this_x) != 0:
+		final_x.append(this_x)
+		final_y.append(this_y)
+	return final_x, final_y
+
+def drop_neg(xvals, yvals):
+	final_x, final_y = [],[]
+	this_x, this_y = [],[]
+	for x, y in zip(xvals, yvals):
+		this_x = [i for i,j in zip(x,y) if i>=0 and j>=0]
+		this_y = [j for i,j in zip(x,y) if i>=0 and j>=0]
+		if len(this_x) != 0:
+			final_x.append(this_x)
+			final_y.append(this_y)
+	return final_x, final_y
+
+def array_apply(arr, func, **kwargs):
+	result =  np.asarray([func(a, **kwargs) for a in arr])
+	return result
+
+def avg_last_pts(arr, numpts=300):
 	if type(arr) == list:
 		arr = np.asarray(arr)
-	sd = np.sqrt(np.sum(arr**2))
-	return sd
+	avg = np.mean(arr[-numpts:])
+	return avg
 
 def std_last_pts(arr, numpts=300):
 	if type(arr) == list:
@@ -398,20 +403,22 @@ def std_last_pts(arr, numpts=300):
 	sd = np.std(arr[-numpts:], ddof=1)
 	return sd
 
-def tafel_slope(log_curr, eta, min_curr=None, max_curr=None):
-	min_idx = 0
-	max_idx = len(log_curr)
-	if min_curr and min_curr >= min(log_curr):
-		min_idx = np.where(log_curr <= min_curr)[0][-1]
-	if max_curr and max_curr <= max(log_curr):
-		max_idx = np.where(log_curr >= max_curr)[0][0]
-	log_curr_trim = log_curr[min_idx:max_idx+1]
-	eta_trim = eta[min_idx:max_idx+1]
-	a, b, r, p, err = stats.linregress(log_curr_trim, eta_trim)
-	rsquare = r**2
-	exchg_curr = 10 ** (b / -a)
-	return a, exchg_curr, rsquare, log_curr_trim, eta_trim
+def std_agg(arr):
+	if type(arr) == list:
+		arr = np.asarray(arr)
+	sd = np.sqrt(np.sum(arr**2))
+	return sd
 
-def tafel_eqn(log_curr, exchg_curr, slope):
-	eta = slope * (log_curr - np.log10(exchg_curr))
-	return eta
+def split_and_filter(arr, split_pts, min_length=0):
+	if type(arr) == list:
+		arr = np.asarray(arr)
+	steps = np.split(arr, split_pts)
+	steps = np.asarray([s for s in steps if len(s) > min_length])
+	return steps
+
+def find_steps(arr, threshold=5):
+	if type(arr) == list:
+		arr = np.asarray(arr)
+	diffs = np.abs(np.diff(arr))
+	splits = np.where(diffs > threshold)[0] + 1
+	return splits 
