@@ -132,6 +132,7 @@ class VisualHandler():
 		self.plot_data = []
 		self.eis_data = []
 		self.tafel_data = []
+		self.bayes_data = []
 		self.datafolder = None
 		self.datafiles = None
 		self.vis_code = 0
@@ -169,6 +170,14 @@ class VisualHandler():
 				this_data.set_processed_data(this_data.get_raw_data())
 		self.tafel_data = fc.datums.lsv_process(new_data)
 	
+	def load_bayes(self):
+		new_data = fc.datums.load_data(filename=self.datafiles, folder=self.datafolder)
+		for this_data in new_data:
+			this_data.set_expt_type('lsv')
+			if this_data.get_processed_data() is None:
+				this_data.set_processed_data(this_data.get_raw_data())
+		self.bayes_data = fc.datums.lsv_process(new_data)
+
 	def draw_plot(self, ax):
 		self.plot_data = [d for d in self.data if d.get_expt_type() in self.expt_codes[self.vis_code]]
 		if self.vis_code == 0:
@@ -200,6 +209,10 @@ class VisualHandler():
 
 	def get_tafel_data(self):
 		return self.tafel_data
+	
+	def get_bayes_data(self):
+		return self.bayes_data
+
 	### modifiers ###
 	def set_datafolder(self, new_folder):
 		self.datafolder = new_folder
@@ -217,6 +230,7 @@ class VisualHandler():
 		self.data.extend(new_data)
 		self.eis_data.extend([d for d in all_data if d.get_expt_type() == 'eis'])
 		self.tafel_data.extend([d for d in all_data if d.get_expt_type() == 'lsv'])
+		self.bayes_data.extend([d for d in all_data if d.get_expt_type() == 'lsv'])
 
 	def set_vis_code(self, new_code):
 		self.vis_code = new_code
@@ -443,16 +457,18 @@ class FuelcellUI(QTabWidget):
 		self.data_tab = self.makeTab(self.datums_layout(), 'Data Processing')
 		self.visuals_tab = self.makeTab(self.visuals_layout(), 'Visualization')
 		self.tafel_tab = self.makeTab(self.tafel_layout(), 'Tafel Analysis')
+		self.bayes_tab = self.makeTab(self.bayes_layout(), 'Bayesian Tafel Analysis')
 		self.eis_tab = self.makeTab(self.eis_layout(), 'HFR Analysis')
 		self.datahub_tab = self.makeTab(self.datahub_layout(), 'Datahub Upload')
 
 		self.data_dict = {}
 		self.eis_dict = {}
 		self.tafel_dict = {}
+		self.bayes_dict = {}
 
 		self.line_dict_vis = {}
 		self.line_dict_eis = {}
-		self.lien_dict_tafel = {}
+		self.line_dict_tafel = {}
 
 	def makeTab(self, layout, name):
 		tab = QWidget()
@@ -1787,9 +1803,9 @@ class FuelcellUI(QTabWidget):
 
 	def plotfeatures_layout_tafel(self):
 		# Tafel Values
-		self.tafel_slope_lbl = QLabel('Tafel slope')
+		self.tafel_slope_lbl = QLabel('Tafel slope: ')
 		self.tafel_slope_val = QLabel('')
-		self.tafel_exchg_lbl = QLabel('Exchange current density')
+		self.tafel_exchg_lbl = QLabel('Exchange current density: ')
 		self.tafel_exchg_val = QLabel('')
 		self.tafel_rsq_lbl = QLabel('Linearity (R-squared):')
 		self.tafel_rsq_val = QLabel('')
@@ -1849,12 +1865,12 @@ class FuelcellUI(QTabWidget):
 		row += 1
 		layout.addWidget(self.ylabel_lbl_tafel, row, 0, 1, 2, Qt.AlignLeft)
 		layout.addWidget(self.ylabel_txtbx_tafel, row, 2, 1, 2, Qt.AlignLeft)
-		row += 1
-		layout.addWidget(self.mincurr_lbl_tafel, row, 0, 1, 2, Qt.AlignLeft)
-		layout.addWidget(self.mincurr_txtbx_tafel, row, 2, 1, 2, Qt.AlignLeft)
-		row += 1
-		layout.addWidget(self.maxcurr_lbl_tafel, row, 0, 1, 2, Qt.AlignLeft)
-		layout.addWidget(self.maxcurr_txtbx_tafel, row, 2, 1, 2, Qt.AlignLeft)
+		# row += 1
+		# layout.addWidget(self.mincurr_lbl_tafel, row, 0, 1, 2, Qt.AlignLeft)
+		# layout.addWidget(self.mincurr_txtbx_tafel, row, 2, 1, 2, Qt.AlignLeft)
+		# row += 1
+		# layout.addWidget(self.maxcurr_lbl_tafel, row, 0, 1, 2, Qt.AlignLeft)
+		# layout.addWidget(self.maxcurr_txtbx_tafel, row, 2, 1, 2, Qt.AlignLeft)
 		row += 1
 		layout.addWidget(self.xmin_lbl_tafel, row, 0, Qt.AlignLeft)		
 		layout.addWidget(self.xmin_txtbx_tafel, row, 1, Qt.AlignLeft)
@@ -1871,6 +1887,8 @@ class FuelcellUI(QTabWidget):
 			if isinstance(w, QLineEdit):
 				self.set_min_height(w)
 				# self.set_min_width(w)
+			if isinstance(w, QLabel):
+				self.set_max_height(w, 1.5)
 		self.set_max_width(self.xmin_txtbx_tafel, 0.5)
 		self.set_max_width(self.xmax_txtbx_tafel, 0.5)
 		self.set_max_width(self.ymin_txtbx_tafel, 0.5)
@@ -2158,6 +2176,472 @@ class FuelcellUI(QTabWidget):
 		fig = self.figcanvas_tafel.figure
 		ax = fig.get_axes()
 		return ax[0]
+
+	###########################
+	# Bayesian Tafel Analysis #
+	###########################
+	### bayes layout ###
+	def bayes_layout(self):
+		# data selection header
+		self.header_bayes = QLabel('Bayesian Tafel Analysis')
+		self.header_bayes.setFont(FuelcellUI.headerfont)
+		# use existing widgets
+		self.useexisting_chkbx_bayes = QCheckBox('Use previously loaded data')
+		self.useexisting_chkbx_bayes.setCheckState(Qt.Unchecked)
+		self.useexisting_chkbx_bayes.setLayoutDirection(Qt.RightToLeft)
+		# folder selection widgets
+		self.folder_lbl_bayes = QLabel('Data folder')
+		self.folder_txtbx_bayes = QLineEdit(FuelcellUI.homedir)
+		self.folder_btn_bayes = QPushButton('Choose folder...')
+		#file selection widgets
+		self.file_lbl_bayes = QLabel('Data files')
+		self.file_txtbx_bayes = QLineEdit()
+		self.file_btn_bayes = QPushButton('Choose files...')
+		# load data button
+		self.loaddata_btn_bayes = QPushButton('Load data')
+		# figure layout
+		self.figlayout_bayes = self.figure_layout_bayes()
+		# save plot header
+		self.header_saveplot_bayes = QLabel('Save Plot')
+		self.header_saveplot_bayes.setFont(FuelcellUI.headerfont)
+		# save plot widgets
+		self.saveloc_lbl_bayes = QLabel('Save location')
+		self.saveloc_txtbx_bayes = QLineEdit()
+		self.saveloc_btn_bayes = QPushButton('Choose location...')
+		self.save_btn_bayes = QPushButton('Save Current Figure')
+		# connect widgets
+		self.useexisting_chkbx_bayes.stateChanged.connect(self.useexisting_action_bayes)
+		self.folder_txtbx_bayes.textChanged.connect(self.folder_action_bayes)
+		self.folder_btn_bayes.clicked.connect(self.choose_folder_bayes)
+		self.file_txtbx_bayes.textChanged.connect(self.file_action_bayes)
+		self.file_btn_bayes.clicked.connect(self.choose_files_bayes)
+		self.loaddata_btn_bayes.clicked.connect(self.loaddata_action_bayes)
+		self.saveloc_btn_bayes.clicked.connect(self.choose_saveloc_bayes)
+		self.save_btn_bayes.clicked.connect(self.save_action_bayes)
+		# build layout
+		layout = QGridLayout()
+		row = 0
+		layout.addWidget(self.header_bayes, row, 0, 1, -1, Qt.AlignHCenter)
+		row += 1
+		layout.addWidget(self.useexisting_chkbx_bayes, row, 0, 1, -1, Qt.AlignRight)
+		row += 1
+		layout.addWidget(self.folder_lbl_bayes, row, 0)
+		layout.addWidget(self.folder_txtbx_bayes, row, 1)
+		layout.addWidget(self.folder_btn_bayes, row, 2)
+		row += 1
+		layout.addWidget(self.file_lbl_bayes, row, 0)
+		layout.addWidget(self.file_txtbx_bayes, row, 1)
+		layout.addWidget(self.file_btn_bayes, row, 2)
+		row += 1
+		layout.addWidget(self.loaddata_btn_bayes, row, 0, 1, -1, Qt.AlignHCenter)
+		row += 1
+		layout.addLayout(self.figlayout_bayes, row, 0, 1, -1, Qt.AlignLeft)
+		row += 1
+		layout.addWidget(self.header_saveplot_bayes, row, 0, 1, -1, Qt.AlignHCenter)
+		row += 1
+		layout.addWidget(self.saveloc_lbl_bayes, row, 0)
+		layout.addWidget(self.saveloc_txtbx_bayes, row, 1)
+		layout.addWidget(self.saveloc_btn_bayes, row, 2)
+		row += 1
+		layout.addWidget(self.save_btn_bayes, row, 0, 1, -1, Qt.AlignHCenter)
+		return layout
+
+	def figure_layout_bayes(self):
+		# plot features header
+		self.header_plotparams_bayes = QLabel('Plot Options')
+		self.header_plotparams_bayes.setFont(FuelcellUI.headerfont)
+		# # visualization selection widgets
+		# self.vistype_lbl = QLabel('Visualization type')
+		# self.vistype_menu = QComboBox()
+		# for name in FuelcellUI.vis_types:
+		# 	self.vistype_menu.addItem(name)
+		# column selection layout
+		self.colslayout_bayes = self.colselection_layout_bayes()
+		# plot features
+		self.plotfeatures_bayes = self.plotfeatures_layout_bayes()
+		# actual figure
+		self.figcanvas_bayes_cdf  = FigureCanvas(Figure(figsize=(5,5)))
+		self.figcanvas_bayes_cdf.figure.subplots()
+		self.figcanvas_bayes_kde  = FigureCanvas(Figure(figsize=(5,5)))
+		self.figcanvas_bayes_kde.figure.subplots()
+		# line properties header
+		self.header_lineprops_bayes = QLabel('Data Selector')
+		self.header_lineprops_bayes.setFont(FuelcellUI.headerfont)
+		# line selector menu
+		self.lineselector_lbl_bayes = QLabel('Dataset')
+		self.lineselector_menu_bayes = QComboBox()
+		# for n in FuelcellUI.tintin:
+		# 	self.lineselector_menu_bayes.addItem(n)
+		# line properties layout
+		# figure properties
+		self.figprops_bayes = self.figprops_layout_bayes()
+		self.lineselector_menu_bayes.currentTextChanged.connect(self.lineselector_action_bayes)
+		# build layout
+		layout = QGridLayout()
+		layout.addWidget(self.header_plotparams_bayes, 0, 0, 1, 2, Qt.AlignHCenter)
+		layout.addLayout(self.colslayout_bayes, 1, 0, 1, 2, Qt.AlignLeft)
+		layout.addLayout(self.plotfeatures_bayes, 2, 0, 1, 2, Qt.AlignLeft)
+		layout.addWidget(self.figcanvas_bayes_cdf, 0, 2, 3, 1, Qt.AlignHCenter)
+		layout.addWidget(self.figcanvas_bayes_kde, 0, 3, 3, 1, Qt.AlignHCenter)
+		layout.addLayout(self.figprops_bayes, 3, 2, 1, 1, Qt.AlignHCenter)
+		layout.addWidget(self.header_lineprops_bayes, 0, 4, 1, 2, Qt.AlignHCenter)
+		layout.addWidget(self.lineselector_lbl_bayes, 1, 4, Qt.AlignLeft)
+		layout.addWidget(self.lineselector_menu_bayes, 1, 5, Qt.AlignLeft)
+		return layout
+
+	def colselection_layout_bayes(self):
+
+		# x column
+		self.xcol_lbl_bayes = QLabel('log(current) column')
+		self.xcol_txtbx_bayes = QLineEdit('0')
+		# y column 
+		self.ycol_lbl_bayes = QLabel('Overpotential column')
+		self.ycol_txtbx_bayes = QLineEdit('1')
+		self.xcol_txtbx_bayes.textChanged.connect(self.xcol_action_bayes)
+		self.ycol_txtbx_bayes.textChanged.connect(self.ycol_action_bayes)
+		# build layout
+		layout = QGridLayout()
+		row = 0
+		layout.addWidget(self.xcol_lbl_bayes, row, 0, Qt.AlignLeft)
+		layout.addWidget(self.xcol_txtbx_bayes, row, 1, Qt.AlignLeft)
+		row += 1
+		layout.addWidget(self.ycol_lbl_bayes, row, 0, Qt.AlignLeft)
+		layout.addWidget(self.ycol_txtbx_bayes, row, 1, Qt.AlignLeft)
+		# resize widgets
+		for i in range(layout.count()):
+			w = layout.itemAt(i).widget()
+			if isinstance(w, QLineEdit):
+				self.set_max_width(w, 1.5)
+
+		for i in range(layout.count()):
+			w = layout.itemAt(i).widget()
+			w.setEnabled(False)
+		return layout
+
+	def plotfeatures_layout_bayes(self):
+		# bayes Values
+		self.bayes_slope_lbl = QLabel('Tafel slope')
+		self.bayes_slope_val = QLabel('')
+		self.bayes_exchg_lbl = QLabel('Exchange current density')
+		self.bayes_exchg_val = QLabel('')
+		self.bayes_rsq_lbl = QLabel('Linearity (R-squared):')
+		self.bayes_rsq_val = QLabel('')
+		self.bayes_slope_val.setFont(FuelcellUI.valuefont)
+		self.bayes_exchg_val.setFont(FuelcellUI.valuefont)
+		self.bayes_rsq_val.setFont(FuelcellUI.valuefont)
+		# x-axis label
+		self.xlabel_lbl_bayes = QLabel('x-axis label')
+		self.xlabel_txtbx_bayes = QLineEdit('log(current)')
+		# y-axis label	
+		self.ylabel_lbl_bayes = QLabel('y-axis label')
+		self.ylabel_txtbx_bayes = QLineEdit('Overpotential [V]')
+		# x-axis limits
+		self.xmin_lbl_bayes = QLabel('x min')
+		self.xmin_txtbx_bayes = QLineEdit()
+		self.xmax_lbl_bayes = QLabel('x max')
+		self.xmax_txtbx_bayes = QLineEdit()
+		# y-axis limits
+		self.ymin_lbl_bayes = QLabel('y min')
+		self.ymin_txtbx_bayes = QLineEdit()
+		self.ymax_lbl_bayes = QLabel('y max')
+		self.ymax_txtbx_bayes = QLineEdit()
+		# connect widgets
+		self.xlabel_txtbx_bayes.textChanged.connect(self.xlabel_action_bayes)
+		self.ylabel_txtbx_bayes.textChanged.connect(self.ylabel_action_bayes)
+		self.xmin_txtbx_bayes.textChanged.connect(self.xlim_action_bayes)
+		self.xmax_txtbx_bayes.textChanged.connect(self.xlim_action_bayes)
+		self.ymin_txtbx_bayes.textChanged.connect(self.ylim_action_bayes)
+		self.ymax_txtbx_bayes.textChanged.connect(self.ylim_action_bayes)
+		# build layout
+		layout = QGridLayout()
+		row = 0
+		layout.addWidget(self.bayes_slope_lbl, row, 0, 1, 2, Qt.AlignLeft)
+		layout.addWidget(self.bayes_slope_val, row, 2, 1, 2, Qt.AlignLeft)
+		row += 1
+		layout.addWidget(self.bayes_exchg_lbl, row, 0, 1, 2, Qt.AlignLeft)
+		layout.addWidget(self.bayes_exchg_val, row, 2, 1, 2, Qt.AlignLeft)
+		row += 1
+		layout.addWidget(self.bayes_rsq_lbl, row, 0, 1, 2, Qt.AlignLeft)
+		layout.addWidget(self.bayes_rsq_val, row, 2, 1, 2, Qt.AlignLeft)
+		row += 1
+		layout.addWidget(self.xlabel_lbl_bayes, row, 0, 1, 2, Qt.AlignLeft)
+		layout.addWidget(self.xlabel_txtbx_bayes, row, 2, 1, 2, Qt.AlignLeft)
+		row += 1
+		layout.addWidget(self.ylabel_lbl_bayes, row, 0, 1, 2, Qt.AlignLeft)
+		layout.addWidget(self.ylabel_txtbx_bayes, row, 2, 1, 2, Qt.AlignLeft)
+		row += 1
+		layout.addWidget(self.xmin_lbl_bayes, row, 0, Qt.AlignLeft)		
+		layout.addWidget(self.xmin_txtbx_bayes, row, 1, Qt.AlignLeft)
+		layout.addWidget(self.xmax_lbl_bayes, row, 2, Qt.AlignLeft)
+		layout.addWidget(self.xmax_txtbx_bayes, row, 3, Qt.AlignLeft)
+		row += 1
+		layout.addWidget(self.ymin_lbl_bayes, row, 0, Qt.AlignLeft)		
+		layout.addWidget(self.ymin_txtbx_bayes, row, 1, Qt.AlignLeft)
+		layout.addWidget(self.ymax_lbl_bayes, row, 2, Qt.AlignLeft)
+		layout.addWidget(self.ymax_txtbx_bayes, row, 3, Qt.AlignLeft)
+		# resize widgets
+		for i in range(layout.count()):
+			w = layout.itemAt(i).widget()
+			if isinstance(w, QLineEdit):
+				self.set_min_height(w)
+				# self.set_min_width(w)
+			if isinstance(w, QLabel):
+				self.set_max_height(w, 1.5)
+
+		for i in range(layout.count()):
+			w = layout.itemAt(i).widget()
+			w.setEnabled(False)
+		self.set_max_width(self.xmin_txtbx_bayes, 0.5)
+		self.set_max_width(self.xmax_txtbx_bayes, 0.5)
+		self.set_max_width(self.ymin_txtbx_bayes, 0.5)
+		self.set_max_width(self.ymax_txtbx_bayes, 0.5)	
+		return layout
+
+	def figprops_layout_bayes(self):
+		# fig width
+		self.figw_lbl_bayes = QLabel('Figure width')
+		self.figw_txtbx_bayes = QLineEdit(str(FuelcellUI.default_figsize[0]))
+		# fig height
+		self.figh_lbl_bayes = QLabel('Figue height')
+		self.figh_txtbx_bayes = QLineEdit(str(FuelcellUI.default_figsize[1]))
+		# fig resolution
+		self.figres_lbl_bayes = QLabel('Figure resolution (DPI)')
+		self.figres_txtbx_bayes = QLineEdit(str(FuelcellUI.default_figres))
+		self.figw_txtbx_bayes.textChanged.connect(self.figsize_action_bayes)
+		self.figh_txtbx_bayes.textChanged.connect(self.figsize_action_bayes)
+		# build layout
+		layout = QGridLayout()
+		row = 0
+		layout.addWidget(self.figw_lbl_bayes, row, 0, Qt.AlignHCenter)
+		layout.addWidget(self.figh_lbl_bayes, row, 1, Qt.AlignHCenter)
+		layout.addWidget(self.figres_lbl_bayes, row, 2, Qt.AlignHCenter)
+		row += 1
+		layout.addWidget(self.figw_txtbx_bayes, row, 0, Qt.AlignHCenter)
+		layout.addWidget(self.figh_txtbx_bayes, row, 1, Qt.AlignHCenter)
+		layout.addWidget(self.figres_txtbx_bayes, row, 2, Qt.AlignHCenter)
+		for i in range(layout.count()):
+			w = layout.itemAt(i).widget()
+			if isinstance(w, QLineEdit):
+				self.set_max_width(w, 0.75)
+		for i in range(layout.count()):
+			w = layout.itemAt(i).widget()
+			w.setEnabled(False)
+		return layout
+	
+	### bayes actions ###
+	def useexisting_action_bayes(self):
+		state = self.useexisting_chkbx_bayes.isChecked()
+		if state:
+			if not self.datahandler.get_data():
+				self.update_status('No data to visualize')
+				self.useexisting_chkbx_bayes.setCheckState(Qt.Unchecked)
+				state = False
+			else:
+				self.vishandler.set_data(self.datahandler.get_data())
+		self.folder_lbl_bayes.setEnabled(not state)
+		self.folder_txtbx_bayes.setEnabled(not state)
+		self.folder_btn_bayes.setEnabled(not state)
+		self.file_lbl_bayes.setEnabled(not state)
+		self.file_txtbx_bayes.setEnabled(not state)
+		self.file_btn_bayes.setEnabled(not state)
+		self.loaddata_btn_bayes.setEnabled(not state)
+		if state:
+			self.draw_plot_bayes()
+
+	def choose_folder_bayes(self):
+		fd = QFileDialog()
+		filepath = fd.getExistingDirectory(self, 'Data Folder', FuelcellUI.homedir)
+		if filepath:
+			self.folder_txtbx_bayes.setText(filepath)
+			self.file_txtbx_bayes.setText('')
+
+	def choose_files_bayes(self):
+		fd = QFileDialog()
+		files, _ = fd.getOpenFileNames(self, 'Data Files', FuelcellUI.homedir)
+		if files:
+			names = [os.path.basename(f) for f in files]
+			folder = os.path.dirname(files[0])
+			self.file_txtbx_bayes.setText('; '.join(names))
+			self.folder_txtbx_bayes.setText(folder)
+
+	def folder_action_bayes(self):
+		try:
+			folder = self.folder_txtbx_bayes.text()
+			self.vishandler.set_datafolder(folder)
+			self.file_action_bayes()
+		except Exception as e:
+			self.update_status('ERROR: ' + str(e))
+
+	def file_action_bayes(self):
+		file_str = self.file_txtbx_bayes.text()
+		folder = self.folder_txtbx_bayes.text()
+		try:
+			if not file_str:
+				files = self.get_all_files(folder, valid=fc.utils.valid_types)
+				self.file_txtbx_bayes.setText('; '.join(files))
+			else:
+				files = file_str.split('; ')
+			files = [os.path.join(folder, f) for f in files]
+			self.vishandler.set_datafiles(files)
+		except Exception as e:
+			self.update_status('ERROR: ' + str(e))
+
+	def loaddata_action_bayes(self):
+		try:
+			self.vishandler.load_bayes()
+			self.draw_plot_bayes()
+		except Exception as e:
+			self.update_status('ERROR: ' + str(e))
+
+	def xcol_action_bayes(self):
+		col = self.xcol_txtbx_bayes.text()
+		if col.isdigit():
+			col = int(col)
+		self.vishandler.set_xcol(col)
+		self.draw_plot_bayes()
+
+	def ycol_action_bayes(self):
+		col = self.ycol_txtbx_bayes.text()
+		if col.isdigit():
+			col = int(col)
+		self.vishandler.set_ycol(col)
+		self.draw_plot_bayes()
+
+	def xlabel_action_bayes(self):
+		new_label = self.xlabel_txtbx_bayes.text()
+		ax = self.get_ax_bayes()
+		ax.set_xlabel(new_label)
+		self.figcanvas_bayes_cdf.draw()
+
+	def ylabel_action_bayes(self):
+		new_label = self.ylabel_txtbx_bayes.text()
+		ax = self.get_ax_bayes()
+		ax.set_ylabel(new_label)
+		self.figcanvas_bayes_cdf.draw()
+
+	def xlim_action_bayes(self):
+		xmin_text = self.xmin_txtbx_bayes.text()
+		xmax_text = self.xmax_txtbx_bayes.text()
+		ax = self.get_ax_bayes()
+		try:
+			xmin = float(xmin_text)
+			ax.set_xbound(lower=xmin)
+		except ValueError:
+			self.update_status('xmin must be a number')
+		try:
+			xmax = float(xmax_text)
+			ax.set_xbound(upper=xmax)
+		except ValueError:
+			self.update_status('xmax must be a number')
+		self.figcanvas_bayes_cdf.draw()
+
+	def ylim_action_bayes(self):
+		ymin_text = self.ymin_txtbx_bayes.text()
+		ymax_text = self.ymax_txtbx_bayes.text()
+		ax = self.get_ax_bayes()
+		try:
+			ymin = float(ymin_text)
+			ax.set_ybound(lower=ymin)
+		except ValueError:
+			self.update_status('ymin must be a number')
+		try:
+			ymax = float(ymax_text)
+			ax.set_ybound(upper=ymax)
+		except ValueError:
+			self.update_status('ymax must be a number')
+		self.figcanvas_bayes_cdf.draw()
+
+	def figsize_action_bayes(self):
+		fig = self.figcanvas_bayes_cdf.figure
+		width = self.figw_txtbx_bayes.text()
+		height = self.figh_txtbx_bayes.text()
+		try:
+			width = float(width)
+			height = float(height)
+			fig.set_figwidth(width)
+			fig.set_figheight(height)
+			self.figcanvas_bayes_cdf.draw()
+		except ValueError:
+			self.update_status('Figure width and height must be numbers')
+
+	def lineselector_action_bayes(self):
+		try:
+			new_label = self.lineselector_menu_bayes.currentText()
+			new_data = self.bayes_dict[new_label]
+			fig_cdf = self.figcanvas_bayes_cdf.figure
+			fig_kde = self.figcanvas_bayes_kde.figure
+			fig_cdf.clf()
+			fig_kde.clf()
+			ax_cdf = self.figcanvas_bayes_cdf.figure.subplots()
+			ax_kde = self.figcanvas_bayes_kde.figure.subplots()
+			### REPLACE THESE LINES ###
+			fc.visuals.plot_lsv(data=[new_data], ax=ax_cdf)
+			fc.visuals.plot_lsv(data=[new_data], ax=ax_kde)
+			###########################
+			self.figcanvas_bayes_cdf.draw()
+			self.figcanvas_bayes_kde.draw()
+		except TypeError:
+			self.update_status('Invalid fit parameters')
+
+	def choose_saveloc_bayes(self):
+		fd = QFileDialog()
+		fd.setViewMode(QFileDialog.Detail)
+		fd.setDefaultSuffix('png')
+		filename, _ = fd.getSaveFileName(self, 'Save Location', self.default_saveloc_bayes())
+		if not filename:
+			filename = self.default_saveloc_bayes()
+		self.saveloc_txtbx_bayes.setText(filename)
+
+	def save_action_bayes(self):
+		try:
+			fig_cdf = self.figcanvas_bayes_cdf.figure
+			fig_kde = self.figcanvas_bayes_kde.figure
+			loc = self.saveloc_txtbx_bayes.text()
+			dpi = self.figres_txtbx_bayes.text()
+			if not dpi.isdigit():
+				self.update_status('Figure resolution must be an integer')
+				dpi = 300
+			else:
+				dpi = int(dpi)
+			name, filetype = loc.split('.')
+			loc_cdf = name + '_CDF.' + filetype
+			loc_kde = name + '_KDE.' + filetype
+			fig_cdf.savefig(loc_cdf, bbbox_inches='tight', dpi=dpi)
+			fig_kde.savefig(loc_kde, bbbox_inches='tight', dpi=dpi)
+			self.update_status('Image saved successfully')
+		except Exception as e:
+			self.update_status('ERROR: ' + str(e))
+
+	def draw_plot_bayes(self):
+		try:
+			fig_cdf = self.figcanvas_bayes_cdf.figure
+			fig_kde = self.figcanvas_bayes_kde.figure
+			fig_cdf.clf()
+			fig_kde.clf()
+			ax_cdf = self.figcanvas_bayes_cdf.figure.subplots()
+			ax_kde = self.figcanvas_bayes_kde.figure.subplots()
+			bayes_data = self.vishandler.get_bayes_data()
+			self.bayes_dict = {d.get_label():d for d in bayes_data}
+			for n in self.bayes_dict.keys():
+				self.lineselector_menu_bayes.addItem(n)
+			this_data = bayes_data[0]
+			### REPLACE THESE LINES ###
+			fc.visuals.plot_lsv(data=[this_data], ax=ax_cdf)
+			fc.visuals.plot_lsv(data=[this_data], ax=ax_kde)
+			###########################
+			self.figcanvas_bayes_cdf.draw()
+			self.figcanvas_bayes_kde.draw()
+
+		except Exception as e:
+			self.update_status('ERROR: ' + str(e))
+
+	def get_ax_bayes(self):
+		fig_cdf = self.figcanvas_bayes_cdf.figure
+		fig_kde = self.figcanvas_bayes_kde.figure
+		ax_cdf = fig_cdf.get_axes()
+		ax_kde = fig_kde.get_axes()
+		return ax_cdf, ax_kde
+
 
 	################
 	# EIS Analysis #
