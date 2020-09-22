@@ -25,7 +25,7 @@ Functions to load and process data
 Functions for creating data visualizations
 * Functions to implement new data visualizations  should be added here
 * In order to link these functions to the GUI,  the function must accept the following arguments:
-    * `data` OR `xdata` and `ydata`: either a list of `Datum` objects which contain the data to be used in the plot, or arguments to individually specify x- and y-data 
+    * `data`: a list of `Datum` objects which contain the data to be used in the plot
     * `fig`: a `matplotlib` `Figure` object
     * `ax`: a `matplotlib` `Axes` object or a list of `Axes` objects if multiple axes are needed
 * Any and all other arguments can be specified as needed for that particular function
