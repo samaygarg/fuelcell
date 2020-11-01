@@ -16,6 +16,49 @@ logging.getLogger('matplotlib.font_manager').disabled = True
 
 ### plotting functions ###
 def plot_cv(data=None, use_all=False, fig=None, ax=None, labels=None, line=True, scatter=False, errs=False, current_column=1, potential_column=0, err_column=3, xunits='V', yunits=r'$mA/cm^2$', export_name=None, export_type='png', fig_kw={}, err_kw={}, **plot_kw):
+	"""
+	Plot cyclic voltammetry data
+
+	Parameters
+	___________
+	data: Datum object(default=None)
+		Datum object containing CV data
+	labels: array-like (default=None)
+		List of labels to be used in the legend. If unspecified, keys of data are used as labels.
+	line: bool (default=True)
+		Whether to draw a line connecting the individual data points
+	scatter: bool (default=False)
+		Whether to draw a marker at each data point
+	errs: bool (default=False)
+		Whether to include an error bar at each data point
+	current_column: int or str (default=1)
+		Index or label of the column containing current data. Used only if automatic column identification fails
+	potential_column: int or str (default=0)
+		Index or label of the column containing potential data. Used only if automatic column identification fails
+	err_column: int or str (default=3)
+		Index or label of the column containing data to draw error bars. Used only if automatic column identification fails. Ignored if errs=False
+	xunits: str (default='V')
+		Units of the x-axis
+	yunits: str (default=r'$mA/cm^2$')
+		Units of the y-axis
+	export_name: str, path object, or file-like (default=None)
+		If specified, the figure will be saved as an image. Can either be a complete file path to save the image in a specific directory or a file name to save the image in the current directory
+	export_type: str (default='png')
+		File type to save the image as. Only used if export_name is specified and export_name does not include the file type
+	fig_kw: dict
+		Dict with keywords passed to the plt.subplots function to create the figure
+	err_kw: dict
+		Dict with keywords passed to the plt.errorbars function used to draw errorbars
+	**plot_kw:
+		all remaining keyword arguments are passed to the plt.plot or plt.scatter function used to draw the graphs
+
+	Returns
+	________
+	fig: Figure
+		Figure object containing all plot elements
+	ax: Axes
+		Axes object containing the plotted data
+	"""
 	if data is None:
 		return None
 	if fig is None and ax is None:
@@ -42,6 +85,49 @@ def plot_cv(data=None, use_all=False, fig=None, ax=None, labels=None, line=True,
 	return fig, ax
 
 def polcurve(data=None, use_all=False, fig=None, ax=None, labels=None, line=True, scatter=True, errs=False, current_column=0, potential_column=1, err_column=3, xunits=r'$mA/cm^2$', yunits='V', export_name=None, export_type='png', fig_kw={}, err_kw={}, **plot_kw):
+	"""
+	Plot polarization curves using chronopotentiometry or chronoamperometry data
+
+	Parameters
+	___________
+	data: Datum object(default=None)
+		Datum object containing CP or CA data
+	labels: array-like (default=None)
+		List of labels to be used in the legend. If unspecified, keys of data are used as labels.
+	line: bool (default=True)
+		Whether to draw a line connecting the individual data points
+	scatter: bool (default=False)
+		Whether to draw a marker at each data point
+	errs: bool (default=False)
+		Whether to include an error bar at each data point
+	current_column: int or str (default=0)
+		Index or label of the column containing current data. Used only if automatic column identification fails
+	potential_column: int or str (default=1)
+		Index or label of the column containing potential data. Used only if automatic column identification fails
+	err_column: int or str (default=3)
+		Index or label of the column containing data to draw error bars. Used only if automatic column identification fails. Ignored if errs=False
+	xunits: str (default=r'$mA/cm^2$')
+		Units of the x-axis
+	yunits: str (default='V')
+		Units of the y-axis
+	export_name: str, path object, or file-like (default=None)
+		If specified, the figure will be saved as an image. Can either be a complete file path to save the image in a specific directory or a file name to save the image in the current directory
+	export_type: str (default='png')
+		File type to save the image as. Only used if export_name is specified and export_name does not include the file type
+	fig_kw: dict
+		Dict with keywords passed to the plt.subplots function to create the figure
+	err_kw: dict
+		Dict with keywords passed to the plt.errorbars function used to draw errorbars
+	**plot_kw:
+		all remaining keyword arguments are passed to the plt.plot or plt.scatter function used to draw the graphs
+
+	Returns
+	________
+	fig: Figure
+		Figure object containing all plot elements
+	ax: Axes
+		Axes object containing the plotted data
+	"""
 	if data is None:
 		return None
 	if fig is None and ax is None:
@@ -68,6 +154,53 @@ def polcurve(data=None, use_all=False, fig=None, ax=None, labels=None, line=True
 	return fig, ax
 
 def plot_cp_raw(data=None, use_all=False, fig=None, ax=None, labels=None, line=False, scatter=True, errs=False, current_column=2, potential_column=1, time_column=0, err_column=(4,5), xunits='s', yunits=('V', 'mA'), export_name=None, export_type='png', fig_kw={}, err_kw={}, **plot_kw):
+	"""
+	Plot raw chronopotentiometry data
+
+	Note: it is strongly reccomended to use this function with data from only a single test and the default values of line, scatter, and errs to avoid overplotting.
+
+	Parameters
+	___________
+	data: Datum object(default=None)
+		Datum object containing CP data
+	labels: array-like (default=None)
+		List of labels to be used in the legend. If unspecified, keys of data are used as labels.
+	line: bool (default=True)
+		Whether to draw a line connecting the individual data points
+	scatter: bool (default=False)
+		Whether to draw a marker at each data point
+	errs: bool (default=False)
+		Whether to include an error bar at each data point
+	current_column: int or str (default=2)
+		Index or label of the column containing current data. Used only if automatic column identification fails
+	potential_column: int or str (default=1)
+		Index or label of the column containing potential data. Used only if automatic column identification fails
+	time_column: int or str (default=0)
+		Index or label of the column containing time data. Used only if automatic column identification fails
+	err_column: tuple or list of int or str (default=(4,5))
+		Indices or labels of the columns containing data to draw error bars. Used only if automatic column identification fails. Ignored if errs=False
+	xunits: str (default=r'$mA/cm^2$')
+		Units of the x-axis
+	yunits: tuple or list of str (default=('ma','V'))
+		Units of the y-axis
+	export_name: str, path object, or file-like (default=None)
+		If specified, the figure will be saved as an image. Can either be a complete file path to save the image in a specific directory or a file name to save the image in the current directory
+	export_type: str (default='png')
+		File type to save the image as. Only used if export_name is specified and export_name does not include the file type
+	fig_kw: dict
+		Dict with keywords passed to the plt.subplots function to create the figure
+	err_kw: dict
+		Dict with keywords passed to the plt.errorbars function used to draw errorbars
+	**plot_kw:
+		all remaining keyword arguments are passed to the plt.plot or plt.scatter function used to draw the graphs
+
+	Returns
+	________
+	fig: Figure
+		Figure object containing all plot elements
+	ax: Tuple
+		Tuple of axes objects containing the plotted data
+	"""
 	if data is None:
 		return None
 	if fig is None and ax is None:
@@ -139,6 +272,49 @@ def plot_tafel(data=None, use_all=False, fig=None, ax=None, labels=None, line=Fa
 	return fig, ax
 
 def plot_lsv(data=None, use_all=False, fig=None, ax=None, labels=None, line=False, scatter=True, errs=False, current_column=1, potential_column=2, err_column=3, xunits='V', yunits=r'$mA/cm^2$', export_name=None, export_type='png', fig_kw={}, **plot_kw):
+	"""
+	Plot linear sweep voltammetry data
+
+	Parameters
+	___________
+	data: Datum object(default=None)
+		Datum object containing LSV data
+	labels: array-like (default=None)
+		List of labels to be used in the legend. If unspecified, keys of data are used as labels.
+	line: bool (default=True)
+		Whether to draw a line connecting the individual data points
+	scatter: bool (default=False)
+		Whether to draw a marker at each data point
+	errs: bool (default=False)
+		Whether to include an error bar at each data point
+	current_column: int or str (default=1)
+		Index or label of the column containing current data. Used only if automatic column identification fails
+	potential_column: int or str (default=0)
+		Index or label of the column containing potential data. Used only if automatic column identification fails
+	err_column: int or str (default=3)
+		Index or label of the column containing data to draw error bars. Used only if automatic column identification fails. Ignored if errs=False
+	xunits: str (default='V')
+		Units of the x-axis
+	yunits: str (default=r'$mA/cm^2$')
+		Units of the y-axis
+	export_name: str, path object, or file-like (default=None)
+		If specified, the figure will be saved as an image. Can either be a complete file path to save the image in a specific directory or a file name to save the image in the current directory
+	export_type: str (default='png')
+		File type to save the image as. Only used if export_name is specified and export_name does not include the file type
+	fig_kw: dict
+		Dict with keywords passed to the plt.subplots function to create the figure
+	err_kw: dict
+		Dict with keywords passed to the plt.errorbars function used to draw errorbars
+	**plot_kw:
+		all remaining keyword arguments are passed to the plt.plot or plt.scatter function used to draw the graphs
+
+	Returns
+	________
+	fig: Figure
+		Figure object containing all plot elements
+	ax: Axes
+		Axes object containing the plotted data
+	"""
 	if data is None:
 		return None
 	if fig is None and ax is None:
@@ -167,6 +343,49 @@ def plot_lsv(data=None, use_all=False, fig=None, ax=None, labels=None, line=Fals
 	return fig, ax
 
 def plot_eis(data=None, use_all=False, fig=None, ax=None, labels=None, line=False, scatter=True, errs=False, current_column=0, potential_column=1, err_column=3, xunits=r'$R_{Re} [\Omega]$', yunits=r'$R_{Im} [\Omega]$', export_name=None, export_type='png', fig_kw={}, **plot_kw):
+	"""
+	Plot electrochemical impedance spectroscopy data
+
+	Parameters
+	___________
+	data: Datum object(default=None)
+		Datum object containing EIS data
+	labels: array-like (default=None)
+		List of labels to be used in the legend. If unspecified, keys of data are used as labels.
+	line: bool (default=True)
+		Whether to draw a line connecting the individual data points
+	scatter: bool (default=False)
+		Whether to draw a marker at each data point
+	errs: bool (default=False)
+		Whether to include an error bar at each data point
+	current_column: int or str (default=1)
+		Index or label of the column containing current data. Used only if automatic column identification fails
+	potential_column: int or str (default=0)
+		Index or label of the column containing potential data. Used only if automatic column identification fails
+	err_column: int or str (default=3)
+		Index or label of the column containing data to draw error bars. Used only if automatic column identification fails. Ignored if errs=False
+	xunits: str (default='V')
+		Units of the x-axis
+	yunits: str (default=r'$mA/cm^2$')
+		Units of the y-axis
+	export_name: str, path object, or file-like (default=None)
+		If specified, the figure will be saved as an image. Can either be a complete file path to save the image in a specific directory or a file name to save the image in the current directory
+	export_type: str (default='png')
+		File type to save the image as. Only used if export_name is specified and export_name does not include the file type
+	fig_kw: dict
+		Dict with keywords passed to the plt.subplots function to create the figure
+	err_kw: dict
+		Dict with keywords passed to the plt.errorbars function used to draw errorbars
+	**plot_kw:
+		all remaining keyword arguments are passed to the plt.plot or plt.scatter function used to draw the graphs
+
+	Returns
+	________
+	fig: Figure
+		Figure object containing all plot elements
+	ax: Axes
+		Axes object containing the plotted data
+	"""
 	if data is None:
 		return None
 	if fig is None and ax is None:
@@ -222,6 +441,34 @@ def plot_hfr(data=None, fig=None, ax=None):
 
 ### base plotting function ###
 def plotter(ax, x, y, e, l, line, scatter, errs, err_kw, **plot_kw):
+	"""
+	Plot data
+
+	Auxilliary function to plot the specified data
+
+	Parameters
+	___________
+	ax: Axes
+		Axes object on which to plot the data
+	x: array-like
+		x values
+	y: array-like
+		y values
+	e: array-like
+		Error values used to draw error bars
+	l: array-like
+		Labels to be used in the legend
+	line: bool
+		Whether to draw a line connecting the individual data points
+	scatter: bool
+		Whether to draw a marker at each data point
+	errs: bool
+		Whether to include an error bar at each data point
+	err_kw: dict
+		Dict with keywords passed to the plt.errorbars function used to draw errorbars
+	**plot_kw:
+		all remaining keyword arguments are passed to the plt.plot or plt.scatter function used to draw the graphs
+	"""
 	actual_line = None
 	actual_caps = None
 	actual_bars = None
@@ -256,6 +503,24 @@ def plotter(ax, x, y, e, l, line, scatter, errs, err_kw, **plot_kw):
  
 ### generate an axis label from the specified name and units ###
 def build_axlabel(base, units):
+	"""
+	Generate axis label
+
+	Auxilliary function to generate an axis label from the specified name and units:
+	'Base [units]'
+
+	Parameters
+	___________
+	base: str
+		Axis name
+	units: str
+		Axis units
+
+	Returns
+	________
+	label:
+		Complete axis label
+	"""
 	label = base
 	if units:
 		label =  label + ' [' + units + ']'
@@ -263,6 +528,27 @@ def build_axlabel(base, units):
 
 ### validation of error values ###
 def check_errs(errs, df, err_name, err_col):
+	"""
+	Check if data set contains error data and return valid error data
+
+	Auxilliary function to check if the given data set contains data that can be used to draw error bars. Returns the error values if possible, otherwise returns an array of zeros.
+
+	Parameters
+	___________
+	errs: bool
+		Whether data set should be checked for error data. If False, an array of zeros is returned.
+	df: DataFrame
+		DataFrame that should contain error data
+	err_name: str
+		String of the form '[datatype]_std' (ex: 'current_std'). Used to parse column labels of df
+	err_col: int or str
+		Index or label of the column containing data to draw error bars. Used only if automatic column identification fails. Ignored if errs=False
+
+	Returns
+	________
+	err: numpy array
+		Array of values which can be used to draw error bars. If valid error values could not be found, an array of zeros of the same length as df is returned
+	"""
 	count = df.shape[0]
 	if errs:
 		try:
@@ -276,6 +562,16 @@ def check_errs(errs, df, err_name, err_col):
 
 ### auxilliary function to export figures ###
 def fig_saver(export_name, export_type='png'):
+	"""
+	Save the current figure
+
+	Auxilliary function to save the current figure as an image.
+
+	export_name: str, path object, or file-like
+		File name to save the image as. Can either be a complete file path to save the image in a specific directory or a file name to save the image in the current directory
+	export_type: str (default='png')
+		File type to save the image as. Only used if export_name does not include the file type
+	"""
 	if '.' not in export_name:
 		export_type = export_type.replace('.','')
 		export_name = export_name + '.' + export_type

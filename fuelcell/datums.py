@@ -17,6 +17,32 @@ expt_types_all = ['cv', 'cp', 'ca', 'lsv', 'eis']
 
 ### functions to load raw data ###
 def load_data(filename=None, folder=None, pattern='', expt_type='', filetype='', delimiter=dlm_default):
+	"""
+	Loads data file(s) as a Datum Object
+
+	Function to load electrochemical data files as a Datum object. If called with no
+	arguments, loads all supported data files in the present folder.
+
+	Parameters
+	___________
+	filename: str, path object, or file-like (default=None)
+		Full filename of a file in the present directory or a complete path to an individual file. If filename is specified, all other arguments except delimiter are ignored.
+	folder: str, path object, or path-like (default=None)
+		Directory in which data files are stored. If none, defaults to the present directory.
+	pattern: str or regex
+		If specified, only files matching this pattern in the specified folder are loaded. Ignored if filename is specified.
+	expt_type: str (default='')
+		Alternative to specifying pattern; ignored if pattern is specified. All files containing expt_type anywhere in the file name will be loaded. Ex: to load all chronopotentiometry files, specify expt_type='cp'.
+	filetype : str
+		Any supported filetype. Only files of the specified file type will be loaded. Can be used in conjunction with pattern or expt_type.
+	delimiter : char (default = '\t')
+		Delimiting character if the file is a text file. Defaults to '\t' (tab-delimiting).
+
+	Returns
+	________
+	data:list of Datum
+		Returns a list of Datum objects, with each entry corresponding to an individual data file
+	"""
 	data = []
 	if filename:
 		if type(filename) != list:
@@ -46,27 +72,170 @@ def load_data(filename=None, folder=None, pattern='', expt_type='', filetype='',
 	return data
 
 def ca_raw(filename=None, folder=None, pattern='', filetype='', delimiter=dlm_default):
+	"""
+	Loads chronoamperometry data
+
+	Efficient way to load multiple chronoamperometry data files at once; equivalent to calling load_data and specifying expt_type='ca'. If called with no arguments, loads all chronoamperometryd files in the present folder.
+
+	Parameters
+	___________
+	filename: str, path object, or file-like (default=None)
+		Full filename of a file in the present directory or a complete path to an individual file. If filename is specified, all other arguments except delimiter are ignored.
+	folder: str, path object, or path-like (default=None)
+		Directory in which data files are stored. If none, defaults to the present directory.
+	pattern: str or regex
+		If specified, only files matching this pattern in the specified folder are loaded. Ignored if filename is specified.
+	filetype : str
+		Any supported filetype. Only files of the specified file type will be loaded. Can be used in conjunction with pattern or expt_type.
+	delimiter : char (default = '\t')
+		Delimiting character if the file is a text file. Defaults to '\t' (tab-delimiting).
+
+	Returns
+	________
+	data:list of Datum
+		Returns a list of Datum objects, with each entry corresponding to an individual data file
+	"""
 	data = load_data(filename, folder, pattern, 'ca', filetype, delimiter)
 	return data
 
 def cp_raw(filename=None, folder=None, pattern='', filetype='', delimiter=dlm_default):
+	"""
+	Loads chronoamperometry data
+
+	Efficient way to load multiple chornopotentiometry files at once; equivalent to calling load_data and specifying expt_type='cp'. If called with no arguments, loads all chronopotentiometry files in the present folder.
+
+	Parameters
+	___________
+	filename: str, path object, or file-like (default=None)
+		Full filename of a file in the present directory or a complete path to an individual file. If filename is specified, all other arguments except delimiter are ignored.
+	folder: str, path object, or path-like (default=None)
+		Directory in which data files are stored. If none, defaults to the present directory.
+	pattern: str or regex
+		If specified, only files matching this pattern in the specified folder are loaded. Ignored if filename is specified.
+	filetype : str
+		Any supported filetype. Only files of the specified file type will be loaded. Can be used in conjunction with pattern or expt_type.
+	delimiter : char (default = '\t')
+		Delimiting character if the file is a text file. Defaults to '\t' (tab-delimiting).
+
+	Returns
+	________
+	data:list of Datum
+		Returns a list of Datum objects, with each entry corresponding to an individual data file
+	"""
 	data = load_data(filename, folder, pattern, 'cp', filetype, delimiter)
 	return data
 
 def cv_raw(filename=None, folder=None, pattern='', filetype='', delimiter=dlm_default):
+	"""
+	Loads cyclic voltammetry data
+
+	Efficient way to load multiple cyclic voltammetry files at once; equivalent to calling load_data and specifying expt_type='cv'. If called with no arguments, loads all cyclic voltammetry files in the present folder.
+
+	Parameters
+	___________
+	filename: str, path object, or file-like (default=None)
+		Full filename of a file in the present directory or a complete path to an individual file. If filename is specified, all other arguments except delimiter are ignored.
+	folder: str, path object, or path-like (default=None)
+		Directory in which data files are stored. If none, defaults to the present directory.
+	pattern: str or regex
+		If specified, only files matching this pattern in the specified folder are loaded. Ignored if filename is specified.
+	filetype : str
+		Any supported filetype. Only files of the specified file type will be loaded. Can be used in conjunction with pattern or expt_type.
+	delimiter : char (default = '\t')
+		Delimiting character if the file is a text file. Defaults to '\t' (tab-delimiting).
+
+	Returns
+	________
+	data:list of Datum
+		Returns a list of Datum objects, with each entry corresponding to an individual data file
+	"""
 	data = load_data(filename, folder, pattern, 'cv', filetype, delimiter)
 	return data
 
 def lsv_raw(filename=None, folder=None, pattern='', filetype='', delimiter=dlm_default):
+	"""
+	Loads linear sweep voltammetry data
+
+	Efficient way to load multiple linear sweep voltammetry files at once; equivalent to calling load_data and specifying expt_type='lsv'. If called with no arguments, loads all linear sweep voltammetry files in the present folder.
+
+	Parameters
+	___________
+	filename: str, path object, or file-like (default=None)
+		Full filename of a file in the present directory or a complete path to an individual file. If filename is specified, all other arguments except delimiter are ignored.
+	folder: str, path object, or path-like (default=None)
+		Directory in which data files are stored. If none, defaults to the present directory.
+	pattern: str or regex
+		If specified, only files matching this pattern in the specified folder are loaded. Ignored if filename is specified.
+	filetype : str
+		Any supported filetype. Only files of the specified file type will be loaded. Can be used in conjunction with pattern or expt_type.
+	delimiter : char (default = '\t')
+		Delimiting character if the file is a text file. Defaults to '\t' (tab-delimiting).
+
+	Returns
+	________
+	data:list of Datum
+		Returns a list of Datum objects, with each entry corresponding to an individual data file
+	"""
 	data = load_data(filename, folder, pattern, 'lsv', filetype, delimiter)
 	return data
 
 def eis_raw(filename=None, folder=None, pattern='', filetype='', delimiter=dlm_default):
+	"""
+	Loads electrochemical impedance spectroscopy data
+
+	Efficient way to load multiple electrochemical impedance spectroscopy files at once; equivalent to calling load_data and specifying expt_type='eis'. If called with no arguments, loads all electrochemical impedance spectroscopy files in the present folder.
+
+	Parameters
+	___________
+	filename: str, path object, or file-like (default=None)
+		Full filename of a file in the present directory or a complete path to an individual file. If filename is specified, all other arguments except delimiter are ignored.
+	folder: str, path object, or path-like (default=None)
+		Directory in which data files are stored. If none, defaults to the present directory.
+	pattern: str or regex
+		If specified, only files matching this pattern in the specified folder are loaded. Ignored if filename is specified.
+	filetype : str
+		Any supported filetype. Only files of the specified file type will be loaded. Can be used in conjunction with pattern or expt_type.
+	delimiter : char (default = '\t')
+		Delimiting character if the file is a text file. Defaults to '\t' (tab-delimiting).
+
+	Returns
+	________
+	data:list of Datum
+		Returns a list of Datum objects, with each entry corresponding to an individual data file
+	"""
 	data = load_data(filename, folder, pattern, 'eis', filetype, delimiter)
 	return data
 
 ### high-level functions for processing data ###
 def ca_process(data=None, current_column=2, potential_column=1, area=5, reference='she', thermo_potential=0, export_data=False, save_dir='processed', threshold=5, min_step_length=50, pts_to_average=300, pyramid=False, **kwargs):
+	"""
+	Processes chronoamperometry data
+
+	Can either process pre-loaded data or load and process data files. If called with no arguments, loads and processes all 'ca' files in the present folder. See process_steps for details on the operations performed.
+
+	Parameters
+	___________
+	data: list of Datum
+		List of Datum objects containing CA data. If unspecified, data will be loaded using ca_raw before processing.
+	current_column : int or str (default=1)
+		Index or label of the column containing current data. Used only if automatic column identification fails
+	potential_column : int or str (default=2)
+		Index or label of the column containing potential data. Used only if automatic column identification fails
+	threshold: int (default=5)
+		Minimum consecutive absolute difference which constitutes a step
+	min_step_length: int (default=25)
+		Minimum length of the arrays which result from spliting the intial array. Arrays shorter than this value will be discarded
+	pts_to_average: int (default=300)
+		Steady-state average and sd are calculated using the last pts_to_average values of the array. Default is 300 points, which is the last 30 seconds of each hold at the instrument's default collection rate of 10 Hz.
+	pyramid: bool (default=True)
+		Specifies whether the current is ramped in both directions. Set pyramid=False if only ramping up or only ramping down.
+	area: int or float (default=5)
+		Geometric active area of the MEA. Scaling factor to convert current to current density.
+	reference: {'she', 'sce'}, int, or float (default='she')
+		Either a string identifying the reference electrode (ie 'she' or 'sce'), or the potential of the reference electrode used. sce=0.241
+	**kwargs:
+		Remaining arguments are passed to ca_raw to load data
+	"""
 	if data is None:
 		data = ca_raw(**kwargs)
 	for d in data:
@@ -85,6 +254,34 @@ def ca_process(data=None, current_column=2, potential_column=1, area=5, referenc
 	return data
 
 def cp_process(data=None, current_column=2, potential_column=1, area=5, reference='she', thermo_potential=0, export_data=False, save_dir='processed', threshold=5, min_step_length=25, pts_to_average=300, pyramid=True, **kwargs):
+	"""
+	Processes chronopotentiometry data
+
+	Can either process pre-loaded data or load and process data files. If called with no arguments, loads and processes all 'cp' files in the present folder. See process_steps for details on the operations performed.
+
+	Parameters
+	___________
+	data: list of Datum
+		List of Datum objects containing CP data. If unspecified, data will be loaded using cp_raw before processing.
+	current_column : int or str (default=1)
+		Index or label of the column containing current data. Used only if automatic column identification fails
+	potential_column : int or str (default=2)
+		Index or label of the column containing potential data. Used only if automatic column identification fails
+	threshold: int (default=5)
+		Minimum consecutive absolute difference which constitutes a step
+	min_step_length: int (default=25)
+		Minimum length of the arrays which result from spliting the intial array. Arrays shorter than this value will be discarded
+	pts_to_average: int (default=300)
+		Steady-state average and sd are calculated using the last pts_to_average values of the array. Default is 300 points, which is the last 30 seconds of each hold at the instrument's default collection rate of 10 Hz.
+	pyramid: bool (default=True)
+		Specifies whether the current is ramped in both directions. Set pyramid=False if only ramping up or only ramping down.
+	area: int or float (default=5)
+		Geometric active area of the MEA. Scaling factor to convert current to current density.
+	reference: {'she', 'sce'}, int, or float (default='she')
+		Either a string identifying the reference electrode (ie 'she' or 'sce'), or the potential of the reference electrode used. sce=0.241
+	**kwargs:
+		Remaining arguments are passed to cp_raw to load data
+	"""
 	if data is None:
 		data = cp_raw(**kwargs)
 	for d in data:
@@ -103,6 +300,26 @@ def cp_process(data=None, current_column=2, potential_column=1, area=5, referenc
 	return data
 
 def cv_process(data=None, current_column=1, potential_column=0, area=5, reference='she', thermo_potential=0, export_data=False, save_dir='processed', **kwargs):
+	"""
+	Processes cyclic voltammetry data
+
+	Can either process pre-loaded data or load and process data files. If called with no arguments, loads and processes all 'cv' files in the present folder. Peforms the following operations in order:
+	1. Parse column labels to find columns containing current and potential data. If parsing fails, specified labels/indices are used
+	2. Convert current to current density using the specified area
+
+	Parameters
+	__________
+	data: list of Datum
+		List of Datum objects containing CV data. If unspecified, data will be loaded using cv _raw before processing.
+	area : int or float (default=5)
+		Geometric active area of the MEA. Scaling factor to convert current to durrent density
+	current_column : int or str (default=1)
+		Index or label of the column containing current data. Used only if automatic column identification fails
+	potential_column : int or str (default=0)
+		Index or label of the column containing potential data. Used only if automatic column identification fails
+	**kwargs:
+		Remaining arguments are passed to cv_raw to load data
+	"""
 	if data is None:
 		data = cv_raw(**kwargs)
 	for d in data:
@@ -125,6 +342,24 @@ def cv_process(data=None, current_column=1, potential_column=0, area=5, referenc
 	return data
 
 def lsv_process(data=None, potential_column=0, current_column=1, area=5, reference='she', thermo_potential=0, export_data=False, save_dir='processed', **kwargs):
+	"""
+	Processes linear sweep voltammetry data
+
+	Can either process pre-loaded data or load and process data files. If called with no arguments, loads and processes all 'lsv' files in the present folder. Peforms the following operations in order:
+
+	Parameters
+	__________
+	data: list of Datum
+		List of Datum objects containing LSV data. If unspecified, data will be loaded using lsv_raw before processing.
+	area : int or float (default=5)
+		Geometric active area of the MEA. Scaling factor to convert current to durrent density
+	current_column : int or str (default=1)
+		Index or label of the column containing current data. Used only if automatic column identification fails
+	potential_column : int or str (default=0)
+		Index or label of the column containing potential data. Used only if automatic column identification fails
+	**kwargs:
+		Remaining arguments are passed to cv_raw to load data
+	"""
 	area = area / 10000 #cm2 to m2
 	if data is None:
 		data = lsv_raw(**kwargs)
@@ -151,6 +386,24 @@ def lsv_process(data=None, potential_column=0, current_column=1, area=5, referen
 	return data
 
 def eis_process(data=None, real_column=0, imag_column=1, export_data=False, save_dir='processed', **kwargs):
+	"""
+	Processes electrochemical impedance spectroscopy data
+
+	Can either process pre-loaded data or load and process data files. If called with no arguments, loads and processes all 'eis' files in the present folder. Peforms the following operations in order:
+
+	Parameters
+	__________
+	data: list of Datum
+		List of Datum objects containing EIS data. If unspecified, data will be loaded using eis_raw before processing.
+	area : int or float (default=5)
+		Geometric active area of the MEA. Scaling factor to convert current to durrent density
+	current_column : int or str (default=1)
+		Index or label of the column containing current data. Used only if automatic column identification fails
+	potential_column : int or str (default=0)
+		Index or label of the column containing potential data. Used only if automatic column identification fails
+	**kwargs:
+		Remaining arguments are passed to cv_raw to load data
+	"""
 	if data is None:
 		data = eis_raw(**kwargs)
 	new_data = []
@@ -189,6 +442,40 @@ def eis_process(data=None, real_column=0, imag_column=1, export_data=False, save
 
 ### cp/ca analysis ###
 def process_steps(data, control_column=0, response_column=1, threshold=5, min_step_length=25, pts_to_average=300, pyramid=True, expt_type='cp', area=1, reference='she', thermo_potential=0):
+	"""
+	Processes stepwise data (ex chronopotentiometry and chronoamperometry data)
+
+	Performs the following operations in order:
+	1. Parse column labels to find the columns containing the desired data. If automatic parsing fails, the specified column labels/indices are used.
+	2. Find the points at which the independent variable steps up or down using the specified threshold value.
+	3. Split the data  at these split points. Holds with fewer than the minimum number of points are filtered out to account for outliers. Note: splitting is based upon values of the independent variable, so this will not result in the loss of meaningful data.
+	4. Average and standard deviation are calculated using the last several points of each step to obtain steady-state values.
+	5. If the indpendent variable is ramped up and down, the steady-state average and standard deviation are calculated across both the ramp-up and ramp-down holds. 
+	6. Any necessary scaling or transformations are performed (ex. reference electrode correction, coversion to current density, etc.)
+
+	Parameters
+	___________
+	data: DataFrame
+		Dataframe containing the data to be processed
+	control_column: int or str (default=0)
+		Label or index of the column containing the control/independent variable values
+	response_column: int or str (default=1)
+		Label or index of the column cotaining the response/dependent variabble values
+	threshold: int (default=5)
+		Minimum consecutive absolute difference which constitutes a step
+	min_step_length: int (default=25)
+		Minimum length of the arrays which result from spliting the intial array. Arrays shorter than this value will be discarded
+	pts_to_average: int (default=300)
+		Steady-state average and sd are calculated using the last pts_to_average values of the array. Default is 300 points, which is the last 30 seconds of each hold at the instrument's default collection rate of 10 Hz.
+	pyramid: bool (default=True)
+		Specifies whether the current is ramped in both directions. Set pyramid=False if only ramping up or only ramping down.
+	expt_type: {'cp', 'ca'} (default='cp')
+		Specifies the type of experiment being analyzed. This is used to determine which variables are the control and response variables.
+	area: int or float (default=5)
+		Geometric active area of the MEA. Scaling factor to convert current to current density.
+	reference: {'she', 'sce'}, int, or float (default='she')
+		Either a string identifying the reference electrode (ie 'she' or 'sce'), or the potential of the reference electrode used. sce=0.241
+	"""
 	if expt_type == 'ca':
 		control_var = 'potential'
 		response_var = 'current'
@@ -304,6 +591,16 @@ def semicircle(x, r, h, k):
 
 ### misc auxilliary functions ###
 def electrode_correct(arr, ref='she'):
+	"""
+	Corrects for the reference electrode
+
+	Parameters
+	___________
+	arr: list or numpy array
+		Array of potential values to which the correction will be applied
+	ref: {'she', 'sce'}, int, or float (default='she')
+		Either a string identifying the reference electrode (ie 'she' or 'sce'), or the potential of the reference electrode used. sce=0.241
+	"""
 	if type(arr) == list:
 		arr = np.asarray(arr)
 	corrected = arr
@@ -318,6 +615,18 @@ def electrode_correct(arr, ref='she'):
 	return corrected
 
 def overpotential_correct(arr, rxn=0):
+	"""
+	Calculate overpotential
+
+	Calculates overpotential for given potential data using the specified thermodynamic potential.
+
+	Parameters
+	___________
+	arr: list or numpy array
+		Array of potential values to which the correction will be applied
+	ref: {'she', 'sce'}, int, or float (default='she')
+		Either a string identifying the reference electrode (ie 'she' or 'sce'), or the potential of the reference electrode used. sce=0.241
+	"""
 	if type(arr) == list:
 		arr = np.asarray(arr)
 	corrected = arr
@@ -332,6 +641,23 @@ def overpotential_correct(arr, rxn=0):
 	return corrected
 
 def find_col(data, col_type, label=None):
+	"""
+	Finds column containing the desired measurement
+
+	Parameters
+	___________
+	data: DataFrame
+		DataFrame containing the full data set
+	col_type: one of {'current', 'potential', 'time', 'current_err', 'potential_err', 'overpotential', 'tafelcurrent', 'realcurr', 'imagcurr'}
+		Type of data being searched for
+	label: str or int (default=None)
+		Label or index of the desired column if the column label cannot be automatically parsed
+
+	Returns
+	________
+	col: numpy array
+		Array of the desired measurement values
+	"""
 	default_label = col_default_labels[col_type]
 	default_id = col_default_ids[col_type]
 	newdf = data.copy()
@@ -377,6 +703,9 @@ def split_at_zeros(xvals, yvals):
 	return final_x, final_y
 
 def drop_neg(xvals, yvals):
+	"""
+	Appli
+	"""
 	final_x, final_y = [],[]
 	this_x, this_y = [],[]
 	for x, y in zip(xvals, yvals):
@@ -388,28 +717,113 @@ def drop_neg(xvals, yvals):
 	return final_x, final_y
 
 def array_apply(arr, func, **kwargs):
+	"""
+	Applies a function to each value in an array
+
+	Parameters
+	___________
+	arr: array-like
+		Array to which function will be applied
+	func: function
+		function to apply to each value
+	**kwargs:
+		Any other arguments required by the specified function
+
+	Returns
+	________
+	result: numpy array
+		Array of the transformed values
+	"""
 	result =  np.asarray([func(a, **kwargs) for a in arr])
 	return result
 
 def avg_last_pts(arr, numpts=300):
+	"""
+	Average of the last several values of an array
+
+	Auxilliary function to compute the average of an array accross the last several data points. Useful for obtaining a steady-state average.
+
+	Parameters
+	___________
+	arr: list or numpy array
+		Array of values used to compute the average.
+	numpts: int (default=300)
+		Average is calculated using the last numpts values of the array.
+
+	Returns
+	________
+	avg: float
+		Average of the last several values
+	"""
 	if type(arr) == list:
 		arr = np.asarray(arr)
 	avg = np.mean(arr[-numpts:])
 	return avg
 
 def std_last_pts(arr, numpts=300):
+	"""
+	Standard deviation of the last several values of an array
+
+	Auxilliary function to compute the standard deviation of an array accross the last several data points. Useful for obtaining a steady-state standard deviation.
+
+	Parameters
+	___________
+	arr: list or numpy array
+		Array of values used to compute the standard deviation.
+	numpts: int (default=300)
+		Standard deviation is calculated using the last numpts values of the array.
+
+	Returns
+	________
+	sd: float
+		Standard deviation of the last several values
+	"""
 	if type(arr) == list:
 		arr = np.asarray(arr)
 	sd = np.std(arr[-numpts:], ddof=1)
 	return sd
 
 def std_agg(arr):
+	"""
+	Aggregate standard deviations of multiple measurements.
+
+	Auxilliary function to calculate the aggregate standard deviation of multiple measuremtns. Assumes that the measurements are independent of each other
+
+	Parameters
+	___________
+	arr: list or numpy array
+		Array of standard deviations to be aggregated
+
+	Returns
+	________
+	sd: float
+		Aggregated standard deviation
+	"""
 	if type(arr) == list:
 		arr = np.asarray(arr)
 	sd = np.sqrt(np.sum(arr**2))
 	return sd
 
 def split_and_filter(arr, split_pts, min_length=0):
+	"""
+	Split continuous array at the specified points.
+
+	Auxilliary function to split continuous current or voltage data into individual holds. Splits the array at the specified indices and discards resulting arrays which are shorter than the required minimum length.
+
+	Parameters
+	___________
+	arr: list or numpy array
+		Array to split
+	split_pts: int or array-like
+		Indices at which to split the array
+	min_length: int (default=0)
+		Minimum length of the arrays which result from spliting the intial array. Arrays shorter than this value will be discarded
+	
+	Returns
+	________
+	steps: numpy array
+		Array containing one array for each hold/step
+	"""
 	if type(arr) == list:
 		arr = np.asarray(arr)
 	steps = np.split(arr, split_pts)
@@ -417,6 +831,23 @@ def split_and_filter(arr, split_pts, min_length=0):
 	return steps
 
 def find_steps(arr, threshold=5):
+	"""
+	Find indices at which an array of roughly stepwise data changes values
+
+	Auxilliary function to find the points at which curren/voltage is stepped up or down during and experiment. Identifies 'steps' by determining the points at which the consecutive absolute difference between array values is greater than a specified threshold.
+
+	Parameters
+	___________
+	arr: list or numpy array
+		Array of roughly stepwise data
+	threshold: int or float  (default=5)
+		Minimum consecutive absolute difference which constitutes a step
+
+	Returns
+	________
+	splits: numpy array
+		Indices at which the array steps up or down
+	"""
 	if type(arr) == list:
 		arr = np.asarray(arr)
 	diffs = np.abs(np.diff(arr))
