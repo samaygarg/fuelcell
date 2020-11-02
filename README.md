@@ -1,4 +1,4 @@
-[![Documentation Status](https://readthedocs.org/projects/fuelcell/badge/?version=latest)](https://fuelcell.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/fuelcell/badge/?version=latest)](https://fuelcell.readthedocs.io/en/latest/?badge=latest) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 # fuelcell
 fuelcell is a Python library  for electrochemical data analysis.
