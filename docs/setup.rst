@@ -4,7 +4,7 @@ Setup
 
 Anaconda
 ---------
-`Anaconca <https://www.anaconda.com/products/individual>`_ is a free Python distribution which includes NumPy, Matplotlib, Pandas, and many other pacakges which are widely used for scientific computing. The fuelcell library utilizes the Pandas, Numpy, and Matplotlib libraries, so the Anaconda distribution must be installed before the this library can be used.
+`Anaconda <https://www.anaconda.com/products/individual>`_ is a free Python distribution which includes NumPy, Matplotlib, Pandas, and many other pacakges which are widely used for scientific computing. The fuelcell library utilizes the Pandas, Numpy, and Matplotlib libraries, so the Anaconda distribution must be installed before the this library can be used.
 
 
 Installation

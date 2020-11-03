@@ -12,5 +12,4 @@ Contents
    :maxdepth: 1
 
    setup.rst
-   tutorials/index.rst
    modules/index.rst
