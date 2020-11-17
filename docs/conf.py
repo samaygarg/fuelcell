@@ -23,7 +23,7 @@ copyright = '2020, Samay Garg'
 author = 'Samay Garg'
 
 # The full version, including alpha/beta/rc tags
-release = '1.3.4'
+release = '0.3.0'
 
 
 # -- General configuration ---------------------------------------------------
