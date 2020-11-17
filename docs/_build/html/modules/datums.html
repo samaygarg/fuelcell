@@ -160,6 +160,463 @@
   <div class="section" id="fuelcell-datums">
 <h1>fuelcell.datums<a class="headerlink" href="#fuelcell-datums" title="Permalink to this headline">¶</a></h1>
 <p>Data processing functions</p>
+<span class="target" id="module-fuelcell.datums"></span><dl class="function">
+<dt id="fuelcell.datums.array_apply">
+<code class="sig-prename descclassname">fuelcell.datums.</code><code class="sig-name descname">array_apply</code><span class="sig-paren">(</span><em class="sig-param">arr</em>, <em class="sig-param">func</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.datums.array_apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies a function to each value in an array</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arr</strong> (<em>array-like</em>) – Array to which function will be applied</p></li>
+<li><p><strong>func</strong> (<em>function</em>) – function to apply to each value</p></li>
+<li><p><strong>**kwargs</strong> – Any other arguments required by the specified function</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>result</strong> – Array of the transformed values</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="fuelcell.datums.avg_last_pts">
+<code class="sig-prename descclassname">fuelcell.datums.</code><code class="sig-name descname">avg_last_pts</code><span class="sig-paren">(</span><em class="sig-param">arr</em>, <em class="sig-param">numpts=300</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.datums.avg_last_pts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Average of the last several values of an array</p>
+<p>Auxilliary function to compute the average of an array accross the last several data points. Useful for obtaining a steady-state average.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arr</strong> (<em>list</em><em> or </em><em>numpy array</em>) – Array of values used to compute the average.</p></li>
+<li><p><strong>numpts</strong> (<em>int</em><em> (</em><em>default=300</em><em>)</em>) – Average is calculated using the last numpts values of the array.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>avg</strong> – Average of the last several values</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="fuelcell.datums.ca_process">
+<code class="sig-prename descclassname">fuelcell.datums.</code><code class="sig-name descname">ca_process</code><span class="sig-paren">(</span><em class="sig-param">data=None</em>, <em class="sig-param">current_column=2</em>, <em class="sig-param">potential_column=1</em>, <em class="sig-param">area=5</em>, <em class="sig-param">reference='she'</em>, <em class="sig-param">thermo_potential=0</em>, <em class="sig-param">export_data=False</em>, <em class="sig-param">save_dir='processed'</em>, <em class="sig-param">threshold=5</em>, <em class="sig-param">min_step_length=50</em>, <em class="sig-param">pts_to_average=300</em>, <em class="sig-param">pyramid=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.datums.ca_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes chronoamperometry data</p>
+<p>Can either process pre-loaded data or load and process data files. If called with no arguments, loads and processes all ‘ca’ files in the present folder. See process_steps for details on the operations performed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>list of Datum</em>) – List of Datum objects containing CA data. If unspecified, data will be loaded using ca_raw before processing.</p></li>
+<li><p><strong>current_column</strong> (<em>int</em><em> or </em><em>str</em><em> (</em><em>default=1</em><em>)</em>) – Index or label of the column containing current data. Used only if automatic column identification fails</p></li>
+<li><p><strong>potential_column</strong> (<em>int</em><em> or </em><em>str</em><em> (</em><em>default=2</em><em>)</em>) – Index or label of the column containing potential data. Used only if automatic column identification fails</p></li>
+<li><p><strong>threshold</strong> (<em>int</em><em> (</em><em>default=5</em><em>)</em>) – Minimum consecutive absolute difference which constitutes a step</p></li>
+<li><p><strong>min_step_length</strong> (<em>int</em><em> (</em><em>default=25</em><em>)</em>) – Minimum length of the arrays which result from spliting the intial array. Arrays shorter than this value will be discarded</p></li>
+<li><p><strong>pts_to_average</strong> (<em>int</em><em> (</em><em>default=300</em><em>)</em>) – Steady-state average and sd are calculated using the last pts_to_average values of the array. Default is 300 points, which is the last 30 seconds of each hold at the instrument’s default collection rate of 10 Hz.</p></li>
+<li><p><strong>pyramid</strong> (<em>bool</em><em> (</em><em>default=True</em><em>)</em>) – Specifies whether the current is ramped in both directions. Set pyramid=False if only ramping up or only ramping down.</p></li>
+<li><p><strong>area</strong> (<em>int</em><em> or </em><em>float</em><em> (</em><em>default=5</em><em>)</em>) – Geometric active area of the MEA. Scaling factor to convert current to current density.</p></li>
+<li><p><strong>reference</strong> (<em>{'she'</em><em>, </em><em>'sce'}</em><em>, </em><em>int</em><em>, or </em><em>float</em><em> (</em><em>default='she'</em><em>)</em>) – Either a string identifying the reference electrode (ie ‘she’ or ‘sce’), or the potential of the reference electrode used. sce=0.241</p></li>
+<li><p><strong>**kwargs</strong> – Remaining arguments are passed to ca_raw to load data</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="fuelcell.datums.ca_raw">
+<code class="sig-prename descclassname">fuelcell.datums.</code><code class="sig-name descname">ca_raw</code><span class="sig-paren">(</span><em class="sig-param">filename=None</em>, <em class="sig-param">folder=None</em>, <em class="sig-param">pattern=''</em>, <em class="sig-param">filetype=''</em>, <em class="sig-param">delimiter='\t'</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.datums.ca_raw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads chronoamperometry data</p>
+<p>Efficient way to load multiple chronoamperometry data files at once; equivalent to calling load_data and specifying expt_type=’ca’. If called with no arguments, loads all chronoamperometryd files in the present folder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em><em>, </em><em>path object</em><em>, or </em><em>file-like</em><em> (</em><em>default=None</em><em>)</em>) – Full filename of a file in the present directory or a complete path to an individual file. If filename is specified, all other arguments except delimiter are ignored.</p></li>
+<li><p><strong>folder</strong> (<em>str</em><em>, </em><em>path object</em><em>, or </em><em>path-like</em><em> (</em><em>default=None</em><em>)</em>) – Directory in which data files are stored. If none, defaults to the present directory.</p></li>
+<li><p><strong>pattern</strong> (<em>str</em><em> or </em><em>regex</em>) – If specified, only files matching this pattern in the specified folder are loaded. Ignored if filename is specified.</p></li>
+<li><p><strong>filetype</strong> (<em>str</em>) – Any supported filetype. Only files of the specified file type will be loaded. Can be used in conjunction with pattern or expt_type.</p></li>
+<li><p><strong>delimiter</strong> (<em>char</em><em> (</em><em>default = '   '</em><em>)</em>) – Delimiting character if the file is a text file. Defaults to ‘  ‘ (tab-delimiting).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>data</strong> – Returns a list of Datum objects, with each entry corresponding to an individual data file</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Datum</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="fuelcell.datums.cp_process">
+<code class="sig-prename descclassname">fuelcell.datums.</code><code class="sig-name descname">cp_process</code><span class="sig-paren">(</span><em class="sig-param">data=None</em>, <em class="sig-param">current_column=2</em>, <em class="sig-param">potential_column=1</em>, <em class="sig-param">area=5</em>, <em class="sig-param">reference='she'</em>, <em class="sig-param">thermo_potential=0</em>, <em class="sig-param">export_data=False</em>, <em class="sig-param">save_dir='processed'</em>, <em class="sig-param">threshold=5</em>, <em class="sig-param">min_step_length=25</em>, <em class="sig-param">pts_to_average=300</em>, <em class="sig-param">pyramid=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.datums.cp_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes chronopotentiometry data</p>
+<p>Can either process pre-loaded data or load and process data files. If called with no arguments, loads and processes all ‘cp’ files in the present folder. See process_steps for details on the operations performed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>list of Datum</em>) – List of Datum objects containing CP data. If unspecified, data will be loaded using cp_raw before processing.</p></li>
+<li><p><strong>current_column</strong> (<em>int</em><em> or </em><em>str</em><em> (</em><em>default=1</em><em>)</em>) – Index or label of the column containing current data. Used only if automatic column identification fails</p></li>
+<li><p><strong>potential_column</strong> (<em>int</em><em> or </em><em>str</em><em> (</em><em>default=2</em><em>)</em>) – Index or label of the column containing potential data. Used only if automatic column identification fails</p></li>
+<li><p><strong>threshold</strong> (<em>int</em><em> (</em><em>default=5</em><em>)</em>) – Minimum consecutive absolute difference which constitutes a step</p></li>
+<li><p><strong>min_step_length</strong> (<em>int</em><em> (</em><em>default=25</em><em>)</em>) – Minimum length of the arrays which result from spliting the intial array. Arrays shorter than this value will be discarded</p></li>
+<li><p><strong>pts_to_average</strong> (<em>int</em><em> (</em><em>default=300</em><em>)</em>) – Steady-state average and sd are calculated using the last pts_to_average values of the array. Default is 300 points, which is the last 30 seconds of each hold at the instrument’s default collection rate of 10 Hz.</p></li>
+<li><p><strong>pyramid</strong> (<em>bool</em><em> (</em><em>default=True</em><em>)</em>) – Specifies whether the current is ramped in both directions. Set pyramid=False if only ramping up or only ramping down.</p></li>
+<li><p><strong>area</strong> (<em>int</em><em> or </em><em>float</em><em> (</em><em>default=5</em><em>)</em>) – Geometric active area of the MEA. Scaling factor to convert current to current density.</p></li>
+<li><p><strong>reference</strong> (<em>{'she'</em><em>, </em><em>'sce'}</em><em>, </em><em>int</em><em>, or </em><em>float</em><em> (</em><em>default='she'</em><em>)</em>) – Either a string identifying the reference electrode (ie ‘she’ or ‘sce’), or the potential of the reference electrode used. sce=0.241</p></li>
+<li><p><strong>**kwargs</strong> – Remaining arguments are passed to cp_raw to load data</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="fuelcell.datums.cp_raw">
+<code class="sig-prename descclassname">fuelcell.datums.</code><code class="sig-name descname">cp_raw</code><span class="sig-paren">(</span><em class="sig-param">filename=None</em>, <em class="sig-param">folder=None</em>, <em class="sig-param">pattern=''</em>, <em class="sig-param">filetype=''</em>, <em class="sig-param">delimiter='\t'</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.datums.cp_raw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads chronoamperometry data</p>
+<p>Efficient way to load multiple chornopotentiometry files at once; equivalent to calling load_data and specifying expt_type=’cp’. If called with no arguments, loads all chronopotentiometry files in the present folder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em><em>, </em><em>path object</em><em>, or </em><em>file-like</em><em> (</em><em>default=None</em><em>)</em>) – Full filename of a file in the present directory or a complete path to an individual file. If filename is specified, all other arguments except delimiter are ignored.</p></li>
+<li><p><strong>folder</strong> (<em>str</em><em>, </em><em>path object</em><em>, or </em><em>path-like</em><em> (</em><em>default=None</em><em>)</em>) – Directory in which data files are stored. If none, defaults to the present directory.</p></li>
+<li><p><strong>pattern</strong> (<em>str</em><em> or </em><em>regex</em>) – If specified, only files matching this pattern in the specified folder are loaded. Ignored if filename is specified.</p></li>
+<li><p><strong>filetype</strong> (<em>str</em>) – Any supported filetype. Only files of the specified file type will be loaded. Can be used in conjunction with pattern or expt_type.</p></li>
+<li><p><strong>delimiter</strong> (<em>char</em><em> (</em><em>default = '   '</em><em>)</em>) – Delimiting character if the file is a text file. Defaults to ‘  ‘ (tab-delimiting).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>data</strong> – Returns a list of Datum objects, with each entry corresponding to an individual data file</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Datum</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="fuelcell.datums.cv_process">
+<code class="sig-prename descclassname">fuelcell.datums.</code><code class="sig-name descname">cv_process</code><span class="sig-paren">(</span><em class="sig-param">data=None</em>, <em class="sig-param">current_column=1</em>, <em class="sig-param">potential_column=0</em>, <em class="sig-param">area=5</em>, <em class="sig-param">reference='she'</em>, <em class="sig-param">thermo_potential=0</em>, <em class="sig-param">export_data=False</em>, <em class="sig-param">save_dir='processed'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.datums.cv_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes cyclic voltammetry data</p>
+<p>Can either process pre-loaded data or load and process data files. If called with no arguments, loads and processes all ‘cv’ files in the present folder. Peforms the following operations in order:
+1. Parse column labels to find columns containing current and potential data. If parsing fails, specified labels/indices are used
+2. Convert current to current density using the specified area</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>list of Datum</em>) – List of Datum objects containing CV data. If unspecified, data will be loaded using cv _raw before processing.</p></li>
+<li><p><strong>area</strong> (<em>int</em><em> or </em><em>float</em><em> (</em><em>default=5</em><em>)</em>) – Geometric active area of the MEA. Scaling factor to convert current to durrent density</p></li>
+<li><p><strong>current_column</strong> (<em>int</em><em> or </em><em>str</em><em> (</em><em>default=1</em><em>)</em>) – Index or label of the column containing current data. Used only if automatic column identification fails</p></li>
+<li><p><strong>potential_column</strong> (<em>int</em><em> or </em><em>str</em><em> (</em><em>default=0</em><em>)</em>) – Index or label of the column containing potential data. Used only if automatic column identification fails</p></li>
+<li><p><strong>**kwargs</strong> – Remaining arguments are passed to cv_raw to load data</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="fuelcell.datums.cv_raw">
+<code class="sig-prename descclassname">fuelcell.datums.</code><code class="sig-name descname">cv_raw</code><span class="sig-paren">(</span><em class="sig-param">filename=None</em>, <em class="sig-param">folder=None</em>, <em class="sig-param">pattern=''</em>, <em class="sig-param">filetype=''</em>, <em class="sig-param">delimiter='\t'</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.datums.cv_raw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads cyclic voltammetry data</p>
+<p>Efficient way to load multiple cyclic voltammetry files at once; equivalent to calling load_data and specifying expt_type=’cv’. If called with no arguments, loads all cyclic voltammetry files in the present folder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em><em>, </em><em>path object</em><em>, or </em><em>file-like</em><em> (</em><em>default=None</em><em>)</em>) – Full filename of a file in the present directory or a complete path to an individual file. If filename is specified, all other arguments except delimiter are ignored.</p></li>
+<li><p><strong>folder</strong> (<em>str</em><em>, </em><em>path object</em><em>, or </em><em>path-like</em><em> (</em><em>default=None</em><em>)</em>) – Directory in which data files are stored. If none, defaults to the present directory.</p></li>
+<li><p><strong>pattern</strong> (<em>str</em><em> or </em><em>regex</em>) – If specified, only files matching this pattern in the specified folder are loaded. Ignored if filename is specified.</p></li>
+<li><p><strong>filetype</strong> (<em>str</em>) – Any supported filetype. Only files of the specified file type will be loaded. Can be used in conjunction with pattern or expt_type.</p></li>
+<li><p><strong>delimiter</strong> (<em>char</em><em> (</em><em>default = '   '</em><em>)</em>) – Delimiting character if the file is a text file. Defaults to ‘  ‘ (tab-delimiting).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>data</strong> – Returns a list of Datum objects, with each entry corresponding to an individual data file</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Datum</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="fuelcell.datums.drop_neg">
+<code class="sig-prename descclassname">fuelcell.datums.</code><code class="sig-name descname">drop_neg</code><span class="sig-paren">(</span><em class="sig-param">xvals</em>, <em class="sig-param">yvals</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.datums.drop_neg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Appli</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fuelcell.datums.eis_process">
+<code class="sig-prename descclassname">fuelcell.datums.</code><code class="sig-name descname">eis_process</code><span class="sig-paren">(</span><em class="sig-param">data=None</em>, <em class="sig-param">real_column=0</em>, <em class="sig-param">imag_column=1</em>, <em class="sig-param">export_data=False</em>, <em class="sig-param">save_dir='processed'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.datums.eis_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes electrochemical impedance spectroscopy data</p>
+<p>Can either process pre-loaded data or load and process data files. If called with no arguments, loads and processes all ‘eis’ files in the present folder. Peforms the following operations in order:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>list of Datum</em>) – List of Datum objects containing EIS data. If unspecified, data will be loaded using eis_raw before processing.</p></li>
+<li><p><strong>area</strong> (<em>int</em><em> or </em><em>float</em><em> (</em><em>default=5</em><em>)</em>) – Geometric active area of the MEA. Scaling factor to convert current to durrent density</p></li>
+<li><p><strong>current_column</strong> (<em>int</em><em> or </em><em>str</em><em> (</em><em>default=1</em><em>)</em>) – Index or label of the column containing current data. Used only if automatic column identification fails</p></li>
+<li><p><strong>potential_column</strong> (<em>int</em><em> or </em><em>str</em><em> (</em><em>default=0</em><em>)</em>) – Index or label of the column containing potential data. Used only if automatic column identification fails</p></li>
+<li><p><strong>**kwargs</strong> – Remaining arguments are passed to cv_raw to load data</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="fuelcell.datums.eis_raw">
+<code class="sig-prename descclassname">fuelcell.datums.</code><code class="sig-name descname">eis_raw</code><span class="sig-paren">(</span><em class="sig-param">filename=None</em>, <em class="sig-param">folder=None</em>, <em class="sig-param">pattern=''</em>, <em class="sig-param">filetype=''</em>, <em class="sig-param">delimiter='\t'</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.datums.eis_raw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads electrochemical impedance spectroscopy data</p>
+<p>Efficient way to load multiple electrochemical impedance spectroscopy files at once; equivalent to calling load_data and specifying expt_type=’eis’. If called with no arguments, loads all electrochemical impedance spectroscopy files in the present folder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em><em>, </em><em>path object</em><em>, or </em><em>file-like</em><em> (</em><em>default=None</em><em>)</em>) – Full filename of a file in the present directory or a complete path to an individual file. If filename is specified, all other arguments except delimiter are ignored.</p></li>
+<li><p><strong>folder</strong> (<em>str</em><em>, </em><em>path object</em><em>, or </em><em>path-like</em><em> (</em><em>default=None</em><em>)</em>) – Directory in which data files are stored. If none, defaults to the present directory.</p></li>
+<li><p><strong>pattern</strong> (<em>str</em><em> or </em><em>regex</em>) – If specified, only files matching this pattern in the specified folder are loaded. Ignored if filename is specified.</p></li>
+<li><p><strong>filetype</strong> (<em>str</em>) – Any supported filetype. Only files of the specified file type will be loaded. Can be used in conjunction with pattern or expt_type.</p></li>
+<li><p><strong>delimiter</strong> (<em>char</em><em> (</em><em>default = '   '</em><em>)</em>) – Delimiting character if the file is a text file. Defaults to ‘  ‘ (tab-delimiting).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>data</strong> – Returns a list of Datum objects, with each entry corresponding to an individual data file</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Datum</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="fuelcell.datums.electrode_correct">
+<code class="sig-prename descclassname">fuelcell.datums.</code><code class="sig-name descname">electrode_correct</code><span class="sig-paren">(</span><em class="sig-param">arr</em>, <em class="sig-param">ref='she'</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.datums.electrode_correct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Corrects for the reference electrode</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arr</strong> (<em>list</em><em> or </em><em>numpy array</em>) – Array of potential values to which the correction will be applied</p></li>
+<li><p><strong>ref</strong> (<em>{'she'</em><em>, </em><em>'sce'}</em><em>, </em><em>int</em><em>, or </em><em>float</em><em> (</em><em>default='she'</em><em>)</em>) – Either a string identifying the reference electrode (ie ‘she’ or ‘sce’), or the potential of the reference electrode used. sce=0.241</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="fuelcell.datums.find_col">
+<code class="sig-prename descclassname">fuelcell.datums.</code><code class="sig-name descname">find_col</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">col_type</em>, <em class="sig-param">label=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.datums.find_col" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds column containing the desired measurement</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>DataFrame</em>) – DataFrame containing the full data set</p></li>
+<li><p><strong>col_type</strong> (<em>one of {'current'</em><em>, </em><em>'potential'</em><em>, </em><em>'time'</em><em>, </em><em>'current_err'</em><em>, </em><em>'potential_err'</em><em>, </em><em>'overpotential'</em><em>, </em><em>'tafelcurrent'</em><em>, </em><em>'realcurr'</em><em>, </em><em>'imagcurr'}</em>) – Type of data being searched for</p></li>
+<li><p><strong>label</strong> (<em>str</em><em> or </em><em>int</em><em> (</em><em>default=None</em><em>)</em>) – Label or index of the desired column if the column label cannot be automatically parsed</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>col</strong> – Array of the desired measurement values</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="fuelcell.datums.find_steps">
+<code class="sig-prename descclassname">fuelcell.datums.</code><code class="sig-name descname">find_steps</code><span class="sig-paren">(</span><em class="sig-param">arr</em>, <em class="sig-param">threshold=5</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.datums.find_steps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find indices at which an array of roughly stepwise data changes values</p>
+<p>Auxilliary function to find the points at which curren/voltage is stepped up or down during and experiment. Identifies ‘steps’ by determining the points at which the consecutive absolute difference between array values is greater than a specified threshold.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arr</strong> (<em>list</em><em> or </em><em>numpy array</em>) – Array of roughly stepwise data</p></li>
+<li><p><strong>threshold</strong> (<em>int</em><em> or </em><em>float</em><em>  (</em><em>default=5</em><em>)</em>) – Minimum consecutive absolute difference which constitutes a step</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>splits</strong> – Indices at which the array steps up or down</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="fuelcell.datums.load_data">
+<code class="sig-prename descclassname">fuelcell.datums.</code><code class="sig-name descname">load_data</code><span class="sig-paren">(</span><em class="sig-param">filename=None</em>, <em class="sig-param">folder=None</em>, <em class="sig-param">pattern=''</em>, <em class="sig-param">expt_type=''</em>, <em class="sig-param">filetype=''</em>, <em class="sig-param">delimiter='\t'</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.datums.load_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads data file(s) as a Datum Object</p>
+<p>Function to load electrochemical data files as a Datum object. If called with no
+arguments, loads all supported data files in the present folder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em><em>, </em><em>path object</em><em>, or </em><em>file-like</em><em> (</em><em>default=None</em><em>)</em>) – Full filename of a file in the present directory or a complete path to an individual file. If filename is specified, all other arguments except delimiter are ignored.</p></li>
+<li><p><strong>folder</strong> (<em>str</em><em>, </em><em>path object</em><em>, or </em><em>path-like</em><em> (</em><em>default=None</em><em>)</em>) – Directory in which data files are stored. If none, defaults to the present directory.</p></li>
+<li><p><strong>pattern</strong> (<em>str</em><em> or </em><em>regex</em>) – If specified, only files matching this pattern in the specified folder are loaded. Ignored if filename is specified.</p></li>
+<li><p><strong>expt_type</strong> (<em>str</em><em> (</em><em>default=''</em><em>)</em>) – Alternative to specifying pattern; ignored if pattern is specified. All files containing expt_type anywhere in the file name will be loaded. Ex: to load all chronopotentiometry files, specify expt_type=’cp’.</p></li>
+<li><p><strong>filetype</strong> (<em>str</em>) – Any supported filetype. Only files of the specified file type will be loaded. Can be used in conjunction with pattern or expt_type.</p></li>
+<li><p><strong>delimiter</strong> (<em>char</em><em> (</em><em>default = '   '</em><em>)</em>) – Delimiting character if the file is a text file. Defaults to ‘  ‘ (tab-delimiting).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>data</strong> – Returns a list of Datum objects, with each entry corresponding to an individual data file</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Datum</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="fuelcell.datums.lsv_process">
+<code class="sig-prename descclassname">fuelcell.datums.</code><code class="sig-name descname">lsv_process</code><span class="sig-paren">(</span><em class="sig-param">data=None</em>, <em class="sig-param">potential_column=0</em>, <em class="sig-param">current_column=1</em>, <em class="sig-param">area=5</em>, <em class="sig-param">reference='she'</em>, <em class="sig-param">thermo_potential=0</em>, <em class="sig-param">export_data=False</em>, <em class="sig-param">save_dir='processed'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.datums.lsv_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes linear sweep voltammetry data</p>
+<p>Can either process pre-loaded data or load and process data files. If called with no arguments, loads and processes all ‘lsv’ files in the present folder. Peforms the following operations in order:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>list of Datum</em>) – List of Datum objects containing LSV data. If unspecified, data will be loaded using lsv_raw before processing.</p></li>
+<li><p><strong>area</strong> (<em>int</em><em> or </em><em>float</em><em> (</em><em>default=5</em><em>)</em>) – Geometric active area of the MEA. Scaling factor to convert current to durrent density</p></li>
+<li><p><strong>current_column</strong> (<em>int</em><em> or </em><em>str</em><em> (</em><em>default=1</em><em>)</em>) – Index or label of the column containing current data. Used only if automatic column identification fails</p></li>
+<li><p><strong>potential_column</strong> (<em>int</em><em> or </em><em>str</em><em> (</em><em>default=0</em><em>)</em>) – Index or label of the column containing potential data. Used only if automatic column identification fails</p></li>
+<li><p><strong>**kwargs</strong> – Remaining arguments are passed to cv_raw to load data</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="fuelcell.datums.lsv_raw">
+<code class="sig-prename descclassname">fuelcell.datums.</code><code class="sig-name descname">lsv_raw</code><span class="sig-paren">(</span><em class="sig-param">filename=None</em>, <em class="sig-param">folder=None</em>, <em class="sig-param">pattern=''</em>, <em class="sig-param">filetype=''</em>, <em class="sig-param">delimiter='\t'</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.datums.lsv_raw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads linear sweep voltammetry data</p>
+<p>Efficient way to load multiple linear sweep voltammetry files at once; equivalent to calling load_data and specifying expt_type=’lsv’. If called with no arguments, loads all linear sweep voltammetry files in the present folder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em><em>, </em><em>path object</em><em>, or </em><em>file-like</em><em> (</em><em>default=None</em><em>)</em>) – Full filename of a file in the present directory or a complete path to an individual file. If filename is specified, all other arguments except delimiter are ignored.</p></li>
+<li><p><strong>folder</strong> (<em>str</em><em>, </em><em>path object</em><em>, or </em><em>path-like</em><em> (</em><em>default=None</em><em>)</em>) – Directory in which data files are stored. If none, defaults to the present directory.</p></li>
+<li><p><strong>pattern</strong> (<em>str</em><em> or </em><em>regex</em>) – If specified, only files matching this pattern in the specified folder are loaded. Ignored if filename is specified.</p></li>
+<li><p><strong>filetype</strong> (<em>str</em>) – Any supported filetype. Only files of the specified file type will be loaded. Can be used in conjunction with pattern or expt_type.</p></li>
+<li><p><strong>delimiter</strong> (<em>char</em><em> (</em><em>default = '   '</em><em>)</em>) – Delimiting character if the file is a text file. Defaults to ‘  ‘ (tab-delimiting).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>data</strong> – Returns a list of Datum objects, with each entry corresponding to an individual data file</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Datum</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="fuelcell.datums.overpotential_correct">
+<code class="sig-prename descclassname">fuelcell.datums.</code><code class="sig-name descname">overpotential_correct</code><span class="sig-paren">(</span><em class="sig-param">arr</em>, <em class="sig-param">rxn=0</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.datums.overpotential_correct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate overpotential</p>
+<p>Calculates overpotential for given potential data using the specified thermodynamic potential.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arr</strong> (<em>list</em><em> or </em><em>numpy array</em>) – Array of potential values to which the correction will be applied</p></li>
+<li><p><strong>ref</strong> (<em>{'she'</em><em>, </em><em>'sce'}</em><em>, </em><em>int</em><em>, or </em><em>float</em><em> (</em><em>default='she'</em><em>)</em>) – Either a string identifying the reference electrode (ie ‘she’ or ‘sce’), or the potential of the reference electrode used. sce=0.241</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="fuelcell.datums.process_steps">
+<code class="sig-prename descclassname">fuelcell.datums.</code><code class="sig-name descname">process_steps</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">control_column=0</em>, <em class="sig-param">response_column=1</em>, <em class="sig-param">threshold=5</em>, <em class="sig-param">min_step_length=25</em>, <em class="sig-param">pts_to_average=300</em>, <em class="sig-param">pyramid=True</em>, <em class="sig-param">expt_type='cp'</em>, <em class="sig-param">area=1</em>, <em class="sig-param">reference='she'</em>, <em class="sig-param">thermo_potential=0</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.datums.process_steps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes stepwise data (ex chronopotentiometry and chronoamperometry data)</p>
+<p>Performs the following operations in order:
+1. Parse column labels to find the columns containing the desired data. If automatic parsing fails, the specified column labels/indices are used.
+2. Find the points at which the independent variable steps up or down using the specified threshold value.
+3. Split the data  at these split points. Holds with fewer than the minimum number of points are filtered out to account for outliers. Note: splitting is based upon values of the independent variable, so this will not result in the loss of meaningful data.
+4. Average and standard deviation are calculated using the last several points of each step to obtain steady-state values.
+5. If the indpendent variable is ramped up and down, the steady-state average and standard deviation are calculated across both the ramp-up and ramp-down holds.
+6. Any necessary scaling or transformations are performed (ex. reference electrode correction, coversion to current density, etc.)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>DataFrame</em>) – Dataframe containing the data to be processed</p></li>
+<li><p><strong>control_column</strong> (<em>int</em><em> or </em><em>str</em><em> (</em><em>default=0</em><em>)</em>) – Label or index of the column containing the control/independent variable values</p></li>
+<li><p><strong>response_column</strong> (<em>int</em><em> or </em><em>str</em><em> (</em><em>default=1</em><em>)</em>) – Label or index of the column cotaining the response/dependent variabble values</p></li>
+<li><p><strong>threshold</strong> (<em>int</em><em> (</em><em>default=5</em><em>)</em>) – Minimum consecutive absolute difference which constitutes a step</p></li>
+<li><p><strong>min_step_length</strong> (<em>int</em><em> (</em><em>default=25</em><em>)</em>) – Minimum length of the arrays which result from spliting the intial array. Arrays shorter than this value will be discarded</p></li>
+<li><p><strong>pts_to_average</strong> (<em>int</em><em> (</em><em>default=300</em><em>)</em>) – Steady-state average and sd are calculated using the last pts_to_average values of the array. Default is 300 points, which is the last 30 seconds of each hold at the instrument’s default collection rate of 10 Hz.</p></li>
+<li><p><strong>pyramid</strong> (<em>bool</em><em> (</em><em>default=True</em><em>)</em>) – Specifies whether the current is ramped in both directions. Set pyramid=False if only ramping up or only ramping down.</p></li>
+<li><p><strong>expt_type</strong> (<em>{'cp'</em><em>, </em><em>'ca'}</em><em> (</em><em>default='cp'</em><em>)</em>) – Specifies the type of experiment being analyzed. This is used to determine which variables are the control and response variables.</p></li>
+<li><p><strong>area</strong> (<em>int</em><em> or </em><em>float</em><em> (</em><em>default=5</em><em>)</em>) – Geometric active area of the MEA. Scaling factor to convert current to current density.</p></li>
+<li><p><strong>reference</strong> (<em>{'she'</em><em>, </em><em>'sce'}</em><em>, </em><em>int</em><em>, or </em><em>float</em><em> (</em><em>default='she'</em><em>)</em>) – Either a string identifying the reference electrode (ie ‘she’ or ‘sce’), or the potential of the reference electrode used. sce=0.241</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="fuelcell.datums.split_and_filter">
+<code class="sig-prename descclassname">fuelcell.datums.</code><code class="sig-name descname">split_and_filter</code><span class="sig-paren">(</span><em class="sig-param">arr</em>, <em class="sig-param">split_pts</em>, <em class="sig-param">min_length=0</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.datums.split_and_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split continuous array at the specified points.</p>
+<p>Auxilliary function to split continuous current or voltage data into individual holds. Splits the array at the specified indices and discards resulting arrays which are shorter than the required minimum length.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arr</strong> (<em>list</em><em> or </em><em>numpy array</em>) – Array to split</p></li>
+<li><p><strong>split_pts</strong> (<em>int</em><em> or </em><em>array-like</em>) – Indices at which to split the array</p></li>
+<li><p><strong>min_length</strong> (<em>int</em><em> (</em><em>default=0</em><em>)</em>) – Minimum length of the arrays which result from spliting the intial array. Arrays shorter than this value will be discarded</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>steps</strong> – Array containing one array for each hold/step</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="fuelcell.datums.std_agg">
+<code class="sig-prename descclassname">fuelcell.datums.</code><code class="sig-name descname">std_agg</code><span class="sig-paren">(</span><em class="sig-param">arr</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.datums.std_agg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aggregate standard deviations of multiple measurements.</p>
+<p>Auxilliary function to calculate the aggregate standard deviation of multiple measuremtns. Assumes that the measurements are independent of each other</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>arr</strong> (<em>list</em><em> or </em><em>numpy array</em>) – Array of standard deviations to be aggregated</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>sd</strong> – Aggregated standard deviation</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="fuelcell.datums.std_last_pts">
+<code class="sig-prename descclassname">fuelcell.datums.</code><code class="sig-name descname">std_last_pts</code><span class="sig-paren">(</span><em class="sig-param">arr</em>, <em class="sig-param">numpts=300</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.datums.std_last_pts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard deviation of the last several values of an array</p>
+<p>Auxilliary function to compute the standard deviation of an array accross the last several data points. Useful for obtaining a steady-state standard deviation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arr</strong> (<em>list</em><em> or </em><em>numpy array</em>) – Array of values used to compute the standard deviation.</p></li>
+<li><p><strong>numpts</strong> (<em>int</em><em> (</em><em>default=300</em><em>)</em>) – Standard deviation is calculated using the last numpts values of the array.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>sd</strong> – Standard deviation of the last several values</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 
 

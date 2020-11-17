@@ -24,17 +24,16 @@ date: 10 November 2020
 bibliography: paper.bib
 ---
 
-# Summary
+# Overview
 
-The forces on stars, galaxies, and dark matter under external gravitational
-fields lead to the dynamical evolution of structures in the universe. The orbits
-of these bodies are therefore key to understanding the formation, history, and
-future state of galaxies. The field of "galactic dynamics," which aims to model
-the gravitating components of galaxies to study their structure and evolution,
-is now well-established, commonly taught, and frequently used in astronomy.
-Aside from toy problems and demonstrations, the majority of problems require
-efficient numerical tools, many of which require the same base code (e.g., for
-performing numerical orbit integration).
+`fuelcell` is a Python package designed to standardize and streamline the anlysis of electrochemical data. This package includes modules for data processing and data visualization, as well as a graphical user interface (GUI) for interactive use.
+
+# Introduction
+
+As the demand for sustainable, carbon-free electricity increases globally, development of electrochemical energy conversion devices is increasing rapidly.  These devices include fuel cells, flow batteries, and water electrolysis cells. A wide range of diagnostic experiments is used to assess the performance, durability, and efficiency of electrochemical devices.1,2 Among the most commonly used techniques are chronopotentiometry (CP), chronoamperometry (CA), cyclic voltammetry (CV), linear sweep voltammetry (LSV), and electrochemical impedance spectroscopy (EIS) experiments.1-3 Although these experimental protocols have been well-established in the field of electrochemistry, the protocols for analyzing electrochemical data have not been clearly standardized. Standardizing electrochemical data analysis will also aid in applying machine learning frameworks to extract valuable information from electrochemical data sets. 
+
+# Statement of need
+A single electrochemical experiment can generate on the order of up to ten thousand data points, and several individual experiments are frequently used to fully assess a single cell. Electrochemical experiments also generate large quantities of raw data which require extensive preprocessing before the data can be used to completely assess the performance of an electrochemical device. Processing and analyzing the data from a single experiment using conventional methods often takes close to an hour, so analyzing these electrochemical data can cause a bottleneck in the research process. Manually processing this data also introduces unnecessary human error into the results, resulting in increased variation both between individual researchers and between research groups within the electrochemical field.4 Therefore, an application which efficiently processes electrochemical data will standardize and expedite the analysis of data generated from electrochemical experiments.
 
 # Statement of need
 
