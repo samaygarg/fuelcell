@@ -22,4 +22,4 @@ The fuelcell library is still under development, so supdates are being made and 
 
 Graphical User Interface
 -------------------------
-The graphical user interface (GUI) can be downloaded as a standalone executable file for either Windows or Mac operating systems. The latest version can be downloaded [here](). See the GUI page for more details.
+The graphical user interface (GUI) can be downloaded as a standalone executable file for either Windows or Mac operating systems. The latest version can be downloaded `here <https://github.com/samaygarg/fuelcell/tree/master/gui/fuelcell_gui>`_. See the GUI page for more details.

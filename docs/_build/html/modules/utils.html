@@ -84,12 +84,13 @@
             
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../setup.html">Setup</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">Modules</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modindex.html">Modules</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="datums.html">fuelcell.datums</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">fuelcell.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="visuals.html">fuelcell.visuals</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../gui.html">Graphical User Interface</a></li>
 </ul>
 
             
@@ -136,7 +137,7 @@
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="index.html">Modules</a> &raquo;</li>
+          <li><a href="modindex.html">Modules</a> &raquo;</li>
         
       <li>fuelcell.utils</li>
     
@@ -160,242 +161,7 @@
   <div class="section" id="fuelcell-utils">
 <h1>fuelcell.utils<a class="headerlink" href="#fuelcell-utils" title="Permalink to this headline">¶</a></h1>
 <p>File handling functions and miscellaneous auxilliary functions</p>
-<span class="target" id="module-fuelcell.utils"></span><dl class="function">
-<dt id="fuelcell.utils.check_dict">
-<code class="sig-prename descclassname">fuelcell.utils.</code><code class="sig-name descname">check_dict</code><span class="sig-paren">(</span><em class="sig-param">var</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.utils.check_dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks if var is a python dictionary</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>var</strong> – variable to be checked</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>result</strong> – True if var is a dict, False otherwise</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="fuelcell.utils.check_export_type">
-<code class="sig-prename descclassname">fuelcell.utils.</code><code class="sig-name descname">check_export_type</code><span class="sig-paren">(</span><em class="sig-param">filetype</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.utils.check_export_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if the filetype is currently supported for export</p>
-<p>fuelcell currently supports export of csv, xls, and xlsx files</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>filetype</strong> (<em>str</em>) – Filetype to be checked</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>filetype</strong> – If the given filetype string is valid, it is returned in lowercase and stripped of ‘.’ characters. If the filetype is not valid, returns ‘csv’</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="fuelcell.utils.check_float">
-<code class="sig-prename descclassname">fuelcell.utils.</code><code class="sig-name descname">check_float</code><span class="sig-paren">(</span><em class="sig-param">var</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.utils.check_float" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks if var is a float</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>var</strong> – variable to be checked</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>result</strong> – True if var is a float, False otherwise</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="fuelcell.utils.check_int">
-<code class="sig-prename descclassname">fuelcell.utils.</code><code class="sig-name descname">check_int</code><span class="sig-paren">(</span><em class="sig-param">var</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.utils.check_int" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks if var is an integer</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>var</strong> – variable to be checked</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>result</strong> – True if var is an int, False otherwise</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="fuelcell.utils.check_labels">
-<code class="sig-prename descclassname">fuelcell.utils.</code><code class="sig-name descname">check_labels</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.utils.check_labels" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parses column labels to determine the data stored in each column</p>
-<p>Current, voltage, time, etc. columns are determined from the units based on standard EC Lab conventions. If a column can be identified, its name is converted to the standard heading (‘i’ for current, ‘v’ for potential, etc.), otherwise, the namne is unchanged.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>data</strong> (<em>DataFarame</em>) – DataFrame in need of column identification</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>newcols</strong> – List containing the new column labels</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="fuelcell.utils.check_list">
-<code class="sig-prename descclassname">fuelcell.utils.</code><code class="sig-name descname">check_list</code><span class="sig-paren">(</span><em class="sig-param">var</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.utils.check_list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks if var is a python list or numpy array</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>var</strong> – variable to be checked</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>result</strong> – True if var is a list or numpy array, False otherwise</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="fuelcell.utils.check_savedir">
-<code class="sig-prename descclassname">fuelcell.utils.</code><code class="sig-name descname">check_savedir</code><span class="sig-paren">(</span><em class="sig-param">folder</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.utils.check_savedir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if the specified folder exists</p>
-<p>Checks if the specified folder exists. If the folder does not exist and cannot be created, returns a path to a folder named ‘processed’ within the current directory</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>folder</strong> (<em>str</em><em>, </em><em>path object</em><em>, or </em><em>path-like</em>) – Folder to be checked</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>path</strong> – Path to folder. Defaults to ‘processed’ if any errors occur.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="fuelcell.utils.check_scalar">
-<code class="sig-prename descclassname">fuelcell.utils.</code><code class="sig-name descname">check_scalar</code><span class="sig-paren">(</span><em class="sig-param">var</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.utils.check_scalar" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks if var is a scalar</p>
-<p>If the variable has a valid length (ie if len(var) is a valid call), it is considered not to be a scalar.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>var</strong> – variable to be checked.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>result</strong> – True if var is a scalar, False otherwise</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="fuelcell.utils.check_str">
-<code class="sig-prename descclassname">fuelcell.utils.</code><code class="sig-name descname">check_str</code><span class="sig-paren">(</span><em class="sig-param">var</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.utils.check_str" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks if var is a string</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>var</strong> – variable to be checked</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>result</strong> – True if var is a string, False otherwise</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="fuelcell.utils.check_type">
-<code class="sig-prename descclassname">fuelcell.utils.</code><code class="sig-name descname">check_type</code><span class="sig-paren">(</span><em class="sig-param">filetype</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.utils.check_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if the filetype is currently supported for import</p>
-<p>fuelcell currently supports import of csv, xls, xlsx, and txt files</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>filetype</strong> (<em>str</em>) – Filetype to be checked</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>filetype</strong> – If the given filetype string is valid, it is returned in lowercase and stripped of ‘.’ characters</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="fuelcell.utils.get_files">
-<code class="sig-prename descclassname">fuelcell.utils.</code><code class="sig-name descname">get_files</code><span class="sig-paren">(</span><em class="sig-param">path=None</em>, <em class="sig-param">pattern=''</em>, <em class="sig-param">filetype=''</em>, <em class="sig-param">files=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.utils.get_files" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find all files matching the desired criteria</p>
-<p>Determines which files in the specified directory match the given regular expression and/or are of the given filetype</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> (<em>str</em><em>, </em><em>path object</em><em>, or </em><em>path-like</em><em> (</em><em>default=None</em><em>)</em>) – Directory in which files will be searched for. If unspecified, the current directory will be used.</p></li>
-<li><p><strong>patter</strong> (<em>str</em><em> (</em><em>default=''</em><em>)</em>) – Regular expression. Only files matching this regular will be found. If unspecified, this parameter is ignored.</p></li>
-<li><p><strong>filetype</strong> (<em>str</em><em> or </em><em>regex</em><em> (</em><em>default=''</em><em>)</em>) – Only files of this filetype will be found. If unspecified, filetype is ignored when finding files</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>files</strong> – List of all files in the specified directory matching the given criteria</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="fuelcell.utils.read_file">
-<code class="sig-prename descclassname">fuelcell.utils.</code><code class="sig-name descname">read_file</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">dlm='\t'</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.utils.read_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Loads the specified file as a Datum object</p>
-<p>The specified file must be of one of the types supported for import. fuelcell currently supports csv, xls, xlsx, and txt files. If the file has a valid filetype but cannot be imported for some reason, a warning is displayed.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> (<em>str</em><em>, </em><em>path object</em><em>, or </em><em>path-like</em>) – Name of a file in the current directory, or a complete path to the desired file.</p></li>
-<li><p><strong>dlm</strong> (<em>str</em><em> (</em><em>default='t'</em><em>)</em>) – Delimiting character if the file is a text file. Defaults to ‘t’ (tab-delimiting).</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>name</strong> (<em>str</em>) – Filename with the filetype removed.</p></li>
-<li><p><strong>data</strong> (<em>Datum</em>) – Datum object containing the data read from the file.</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="fuelcell.utils.save_data">
-<code class="sig-prename descclassname">fuelcell.utils.</code><code class="sig-name descname">save_data</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">filename=None</em>, <em class="sig-param">folder=None</em><span class="sig-paren">)</span><a class="headerlink" href="#fuelcell.utils.save_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save data to a local file</p>
-<p>Saves data stored in a pandas DataFrame as an excel or csv file. Valid filetypes to save as are xls, xlsx, and csv (default is csv). If the specified filename already exists, the name is modified to avoid unintentionally overwriting data. If the specified folder does not exist and cannot be created, the file is saved to a folder named ‘processed’ within the current director.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<em>DataFrame</em>) – Data to be saved</p></li>
-<li><p><strong>filename</strong> (<em>str</em><em>, </em><em>path object</em><em>, or </em><em>file-like</em><em> (</em><em>default=None</em><em>)</em>) – Filename to save the data as. Either a full filename or complete path to an individual file. If the file already exists, the specified name is modified to avoid overwriting data. If unspecified, an arbitrary name is used.</p></li>
-<li><p><strong>folder</strong> (<em>str</em><em>, </em><em>path obbject</em><em>, or </em><em>path-like</em><em> (</em><em>default=None</em><em>)</em>) – Folder in which data will be saved. If unspecified and folder cannot be determined from filename, or the specified folder is invalid and cannot be created, defaults to ‘processed’</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</div>
+<span class="target" id="module-fuelcell.utils"></span></div>
 
 
            </div>

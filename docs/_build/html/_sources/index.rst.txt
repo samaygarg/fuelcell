@@ -12,4 +12,6 @@ Contents
    :maxdepth: 1
 
    setup.rst
-   modules/index.rst
+   modules/modindex.rst
+   gui.rst
+   
