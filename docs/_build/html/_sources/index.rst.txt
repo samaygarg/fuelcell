@@ -19,13 +19,3 @@ Contents
 GUI
 ======
 Download the latest version of the GUI `here <https://github.com/samaygarg/fuelcell/tree/master/gui/fuelcell_gui>`_.
-
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search
