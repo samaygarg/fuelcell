@@ -13,9 +13,9 @@ Contents
    :maxdepth: 1
 
    setup.rst
-   modules/modindex.rst
    gui.rst
-
+   modules/modindex.rst
+   
 GUI
 ======
 Download the latest version of the GUI `here <https://github.com/samaygarg/fuelcell/tree/master/gui/fuelcell_gui>`_.
