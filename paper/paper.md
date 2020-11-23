@@ -30,7 +30,7 @@ bibliography: paper.bib
 
 # Introduction
 
-As the demand for sustainable, carbon-free electricity increases globally, development of electrochemical energy conversion devices is increasing rapidly.  These devices include fuel cells, flow batteries, and water electrolysis cells. A wide range of diagnostic experiments is used to assess the performance, durability, and efficiency of electrochemical devices. [@Bard:2001][@Newman:2004] Among the most commonly used techniques are chronopotentiometry (CP), chronoamperometry (CA), cyclic voltammetry (CV), linear sweep voltammetry (LSV), and electrochemical impedance spectroscopy (EIS) experiments.[@Bard:2001][@Newman:2004][@Orazem:2008][@Wang:2003]Although these experimental protocols have been well-established in the field of electrochemistry, the protocols for analyzing electrochemical data have not been clearly standardized. Standardizing electrochemical data analysis will also aid in applying machine learning frameworks to extract valuable information from electrochemical data sets. 
+As the demand for sustainable, carbon-free electricity increases globally, development of electrochemical energy conversion devices is increasing rapidly.  These devices include fuel cells, flow batteries, and water electrolysis cells. A wide range of diagnostic experiments is used to assess the performance, durability, and efficiency of electrochemical devices. [@Bard:2001][@Newman:2004] Among the most commonly used techniques are chronopotentiometry (CP), chronoamperometry (CA), cyclic voltammetry (CV), linear sweep voltammetry (LSV), and electrochemical impedance spectroscopy (EIS) experiments.[@Bard:2001 @Newman:2004 @Orazem:2008][@Wang:2003]Although these experimental protocols have been well-established in the field of electrochemistry, the protocols for analyzing electrochemical data have not been clearly standardized. Standardizing electrochemical data analysis will also aid in applying machine learning frameworks to extract valuable information from electrochemical data sets. 
 
 # Statement of need
 A single electrochemical experiment can generate on the order of ten thousand data points, and several individual experiments are frequently used to assess a single cell. Electrochemical experiments also generate large quantities of raw data, which require extensive preprocessing before the data can be used to assess the performance of an electrochemical device completely. Processing and analyzing the data from a single experiment using conventional methods often is a bottleneck and time consuming. Manually processing this data also introduces unnecessary human error into the results, resulting in increased variation both between individual researchers and between research groups within the electrochemical field.[@Agbo:2019] Therefore, an application that efficiently processes electrochemical data will standardize and expedite the analysis of data generated from electrochemical experiments.
@@ -48,6 +48,6 @@ The GUI is included in the standard `fuelcell` installation, but it can also be 
 ![: Data visualization tab of the GUI.\label{fig:2}](fig2.png)
 
 # Acknowledgements
-
+The authors acknoledge funding from the Berkeley Lab Undergraduate Research Fellowship. SG 
 
 # References
