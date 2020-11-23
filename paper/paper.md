@@ -48,6 +48,6 @@ The GUI is included in the standard `fuelcell` installation, but it can also be 
 ![: Data visualization tab of the GUI.\label{fig:2}](fig2.png)
 
 # Acknowledgements
-The authors acknoledge funding from the Berkeley Lab Undergraduate Research Fellowship. SG 
+SG acknowledges funding from the Berkeley Lab Undergraduate Research Fellowship. The authors thank Dr. Xiong Peng, Zachary Taie, Eden Tzanetopoulos, and Grace Anderson for helpful discussions and assisting with testing the program.
 
 # References
