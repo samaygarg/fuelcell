@@ -45,7 +45,7 @@ The visuals module includes functions to generate visualizations, which are comm
 ![Examples of figures created using functions in fuelcell.visuals. (a) Polarization curves generated using data from CP experiments. (b) Cyclic voltammograms. (c) LSV data with the Tafel fit overlaid in yellow. (d) EIS data with the HFR value calculated using both a semicircle fit and a linear fit.\label{fig:1}](fig1.png)
 ## fuelcell_gui
 The GUI is included in the standard fuelcell installation, but it can also be installed independently as a single executable file (Windows and MacOS) that includes all necessary dependencies.  The GUI also enables users to interactively create and customize visualizations without being familiar with the ins and outs of the matplotlib library. This GUI has been shown to greatly reduce the time required to process electrochemical data, with researchers using the program reporting that it reduces the time required to process data from testing four cells from close to one hour to about five minutes.
-![: Data visualization tab of the GUI. (a) Polarization curves generated using data from CP experiments. (b) Cyclic voltammograms. (c) LSV data with the Tafel fit overlaid in yellow. (d) EIS data with the HFR value calculated using both a semicircle fit and a linear fit.\label{fig:2}](fig2.png)
+![: Data visualization tab of the GUI.\label{fig:2}](fig2.png)
 
 
 
