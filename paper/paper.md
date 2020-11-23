@@ -33,29 +33,21 @@ bibliography: paper.bib
 As the demand for sustainable, carbon-free electricity increases globally, development of electrochemical energy conversion devices is increasing rapidly.  These devices include fuel cells, flow batteries, and water electrolysis cells. A wide range of diagnostic experiments is used to assess the performance, durability, and efficiency of electrochemical devices.1,2 Among the most commonly used techniques are chronopotentiometry (CP), chronoamperometry (CA), cyclic voltammetry (CV), linear sweep voltammetry (LSV), and electrochemical impedance spectroscopy (EIS) experiments.1-3 Although these experimental protocols have been well-established in the field of electrochemistry, the protocols for analyzing electrochemical data have not been clearly standardized. Standardizing electrochemical data analysis will also aid in applying machine learning frameworks to extract valuable information from electrochemical data sets. 
 
 # Statement of need
-A single electrochemical experiment can generate on the order of up to ten thousand data points, and several individual experiments are frequently used to fully assess a single cell. Electrochemical experiments also generate large quantities of raw data which require extensive preprocessing before the data can be used to completely assess the performance of an electrochemical device. Processing and analyzing the data from a single experiment using conventional methods often takes close to an hour, so analyzing these electrochemical data can cause a bottleneck in the research process. Manually processing this data also introduces unnecessary human error into the results, resulting in increased variation both between individual researchers and between research groups within the electrochemical field.4 Therefore, an application which efficiently processes electrochemical data will standardize and expedite the analysis of data generated from electrochemical experiments.
+A single electrochemical experiment can generate on the order of ten thousand data points, and several individual experiments are frequently used to assess a single cell. Electrochemical experiments also generate large quantities of raw data, which require extensive preprocessing before the data can be used to assess the performance of an electrochemical device completely. Processing and analyzing the data from a single experiment using conventional methods often is a bottleneck and time consuming. Manually processing this data also introduces unnecessary human error into the results, resulting in increased variation both between individual researchers and between research groups within the electrochemical field.4 Therefore, an application that efficiently processes electrochemical data will standardize and expedite the analysis of data generated from electrochemical experiments.
 
-# Statement of need
+# Functionality
 
-`Gala` is an Astropy-affiliated Python package for galactic dynamics. Python
-enables wrapping low-level languages (e.g., C) for speed without losing
-flexibility or ease-of-use in the user-interface. The API for `Gala` was
-designed to provide a class-based and user-friendly interface to fast (C or
-Cython-optimized) implementations of common operations such as gravitational
-potential and force evaluation, orbit integration, dynamical transformations,
-and chaos indicators for nonlinear dynamics. `Gala` also relies heavily on and
-interfaces well with the implementations of physical units and astronomical
-coordinate systems in the `Astropy` package [@astropy] (`astropy.units` and
-`astropy.coordinates`).
+fuelcell includes modules for both data processing and visualization to enable a smooth, efficient workflow from raw data to publication-ready figures. These modules can be imported and used programmatically as a standard Python package, and fuelcell also includes a standalone GUI that allows users with little or no programming experience to utilize these modules.  fuelcell also serves as a platform that can be expanded to facilitate new and more advanced techniques as the needs of the electrochemical community evolve.
+## fuelcell.datums
+Every experiment requires a unique protocol to process the raw experimental data, so the datums module contains experiment-specific functions to read and process data for each experiment. Currently, functions to process CV, CP, CA, LSV, and EIS data are included fuelcell, and new protocols can be added to the project by opening an issue on github. The complexity of these processing protocols varies depending on the experiment, and the specific data processing steps carried out for each experiment are detailed in the documentation. The datums module also includes functions to determine the Tafel slope and exchange current density from LSV data as well as to extract the high-frequency resistance (HFR) value from EIS data.3,4
+## fuelcell.visuals
+The visuals module includes functions to generate visualizations, which are commonly used in the electrochemical community. fuelcell currently includes functions to generate polarization curves, cyclic voltammograms, linear sweep voltammograms, and Nyquist plots (Fig. 1). This module is built around the matplotlib library, which allows for highly customizable visualizations. The visuals module is designed to integrate both seamlessly with the datums module and to function as an independent module that can be incorporated into an existing workflow.
+![Examples of figures created using functions in fuelcell.visuals. (a) Polarization curves generated using data from CP experiments. (b) Cyclic voltammograms. (c) LSV data with the Tafel fit overlaid in yellow. (d) EIS data with the HFR value calculated using both a semicircle fit and a linear fit.\label{fig:1}](fig1.png)
+## fuelcell_gui
+The GUI is included in the standard fuelcell installation, but it can also be installed independently as a single executable file (Windows and MacOS) that includes all necessary dependencies.  The GUI also enables users to interactively create and customize visualizations without being familiar with the ins and outs of the matplotlib library. This GUI has been shown to greatly reduce the time required to process electrochemical data, with researchers using the program reporting that it reduces the time required to process data from testing four cells from close to one hour to about five minutes.
+![: Data visualization tab of the GUI. (a) Polarization curves generated using data from CP experiments. (b) Cyclic voltammograms. (c) LSV data with the Tafel fit overlaid in yellow. (d) EIS data with the HFR value calculated using both a semicircle fit and a linear fit.\label{fig:2}](fig2.png)
 
-`Gala` was designed to be used by both astronomical researchers and by
-students in courses on gravitational dynamics or astronomy. It has already been
-used in a number of scientific publications [@Pearson:2017] and has also been
-used in graduate courses on Galactic dynamics to, e.g., provide interactive
-visualizations of textbook material [@Binney:2008]. The combination of speed,
-design, and support for Astropy functionality in `Gala` will enable exciting
-scientific explorations of forthcoming data releases from the *Gaia* mission
-[@gaia] by students and experts alike.
+
 
 # Mathematics
 
