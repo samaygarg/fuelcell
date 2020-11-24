@@ -26,7 +26,7 @@ bibliography: paper.bib
 
 # Overview
 
-`fuelcell` is a Python package designed to standardize and streamline the anlysis of electrochemical data. This package includes modules for data processing and data visualization, as well as a graphical user interface (GUI) for interactive use.
+`fuelcell` is a Python package designed to standardize and streamline the analysis of electrochemical data. This package includes modules for data processing and data visualization, as well as a graphical user interface (GUI) for interactive use.
 
 # Introduction
 
