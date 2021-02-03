@@ -22,14 +22,15 @@ from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QDesktopServices, QFont, QPalette, QColor
 from PyQt5.QtCore import Qt
-
-from matplotlib.backends.qt_compat import is_pyqt5
-if is_pyqt5():
-    from matplotlib.backends.backend_qt5agg import (
-        FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
-else:
-    from matplotlib.backends.backend_qt4agg import (
-        FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
+from PyQt5.QtCore import qVersion
+from matplotlib.backends.backend_qt5agg import (FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
+# from matplotlib.backends.qt_compat import is_pyqt5
+# if qVersion() == 5:
+#     from matplotlib.backends.backend_qt5agg import (
+#         FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
+# else:
+#     from matplotlib.backends.backend_qt4agg import (
+#         FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
 
 import matplotlib
 from matplotlib.figure import Figure
@@ -457,9 +458,9 @@ class FuelcellUI(QTabWidget):
 		self.data_tab = self.makeTab(self.datums_layout(), 'Data Processing')
 		self.visuals_tab = self.makeTab(self.visuals_layout(), 'Visualization')
 		self.tafel_tab = self.makeTab(self.tafel_layout(), 'Tafel Analysis')
-		self.bayes_tab = self.makeTab(self.bayes_layout(), 'Bayesian Tafel Analysis')
+		# self.bayes_tab = self.makeTab(self.bayes_layout(), 'Bayesian Tafel Analysis')
 		self.eis_tab = self.makeTab(self.eis_layout(), 'HFR Analysis')
-		self.datahub_tab = self.makeTab(self.datahub_layout(), 'Datahub Upload')
+		# self.datahub_tab = self.makeTab(self.datahub_layout(), 'Datahub Upload')
 
 		self.data_dict = {}
 		self.eis_dict = {}
@@ -486,22 +487,22 @@ class FuelcellUI(QTabWidget):
 	def set_max_width(self, widget, scale=1):
 		size = widget.sizeHint()
 		w = size.width()
-		widget.setMaximumWidth(w*scale)
+		widget.setMaximumWidth(int(w*scale))
 
 	def set_min_width(self, widget, scale=1):
 		size = widget.sizeHint()
 		w = size.width()
-		widget.setMinimumWidth(w*scale)
+		widget.setMinimumWidth(int(w*scale))
 
 	def set_max_height(self, widget, scale=1):
 		size = widget.sizeHint()
 		h = size.height()
-		widget.setMaximumHeight(h*scale)
+		widget.setMaximumHeight(int(h*scale))
 
 	def set_min_height(self, widget, scale=1):
 		size = widget.sizeHint()
 		h = size.height()
-		widget.setMinimumHeight(h*scale)
+		widget.setMinimumHeight(int(h*scale))
 	
 	def get_all_files(self, dir, valid=None):
 		allfiles = os.listdir(dir)
@@ -1523,7 +1524,7 @@ class FuelcellUI(QTabWidget):
 			self.linestyle_menu_vis.setCurrentText(linestyle)
 			self.linewidth_txtbx_vis.setValue(linewidth)
 			self.markerstyle_menu_vis.setCurrentText(Line2D.markers[markerstyle])
-			self.markersize_txtbx_vis.setValue(markersize)
+			self.markersize_txtbx_vis.setValue(int(markersize))
 		except KeyError:
 			pass
 
@@ -1603,7 +1604,7 @@ class FuelcellUI(QTabWidget):
 			ms = self.markersize_txtbx_vis.value()
 			data = self.line_dict_vis[label]
 			line = data.get_line()
-			line.set_markersize(ms)
+			line.set_markersize(int(ms))
 			self.shwowleg_action_vis()
 			self.figcanvas_vis.draw()
 		except KeyError:
@@ -1628,7 +1629,7 @@ class FuelcellUI(QTabWidget):
 				dpi = 300
 			else:
 				dpi = int(dpi)
-			fig.savefig(loc, bbbox_inches='tight', dpi=dpi)
+			fig.savefig(loc, dpi=dpi)
 			self.update_status('Image saved successfully')
 		except Exception as e:
 			self.update_status('ERROR: ' + str(e))
@@ -2130,9 +2131,9 @@ class FuelcellUI(QTabWidget):
 		fd = QFileDialog()
 		fd.setViewMode(QFileDialog.Detail)
 		fd.setDefaultSuffix('png')
-		filename, _ = fd.getSaveFileName(self, 'Save Location', self.default_saveloc_tafel())
+		filename, _ = fd.getSaveFileName(self, 'Save Location', self.default_saveloc_vis())
 		if not filename:
-			filename = self.default_saveloc_tafel()
+			filename = self.default_saveloc_vis()
 		self.saveloc_txtbx_tafel.setText(filename)
 
 	def save_action_tafel(self):
@@ -2145,7 +2146,7 @@ class FuelcellUI(QTabWidget):
 				dpi = 300
 			else:
 				dpi = int(dpi)
-			fig.savefig(loc, bbbox_inches='tight', dpi=dpi)
+			fig.savefig(loc, dpi=dpi)
 			self.update_status('Image saved successfully')
 		except Exception as e:
 			self.update_status('ERROR: ' + str(e))
@@ -2606,8 +2607,8 @@ class FuelcellUI(QTabWidget):
 			name, filetype = loc.split('.')
 			loc_cdf = name + '_CDF.' + filetype
 			loc_kde = name + '_KDE.' + filetype
-			fig_cdf.savefig(loc_cdf, bbbox_inches='tight', dpi=dpi)
-			fig_kde.savefig(loc_kde, bbbox_inches='tight', dpi=dpi)
+			fig_cdf.savefig(loc_cdf, dpi=dpi)
+			fig_kde.savefig(loc_kde, dpi=dpi)
 			self.update_status('Image saved successfully')
 		except Exception as e:
 			self.update_status('ERROR: ' + str(e))
@@ -2788,7 +2789,7 @@ class FuelcellUI(QTabWidget):
 		self.hfrsemi_val = QLabel('')
 		self.hfrlin_val.setFont(FuelcellUI.valuefont)
 		self.hfrsemi_val.setFont(FuelcellUI.valuefont)
-		# x-axis labbel
+		# x-axis label
 		self.xlabel_lbl_eis = QLabel('x-axis label')
 		self.xlabel_txtbx_eis = QLineEdit('$R_{Re} [\Omega]]')
 		# y-axis label	
@@ -3029,9 +3030,9 @@ class FuelcellUI(QTabWidget):
 		fd = QFileDialog()
 		fd.setViewMode(QFileDialog.Detail)
 		fd.setDefaultSuffix('png')
-		filename, _ = fd.getSaveFileName(self, 'Save Location', self.default_saveloc_eis())
+		filename, _ = fd.getSaveFileName(self, 'Save Location', self.default_saveloc_vis())
 		if not filename:
-			filename = self.default_saveloc_eis()
+			filename = self.default_saveloc_vis()
 		self.saveloc_txtbx_eis.setText(filename)
 
 	def save_action_eis(self):
@@ -3044,7 +3045,7 @@ class FuelcellUI(QTabWidget):
 				dpi = 300
 			else:
 				dpi = int(dpi)
-			fig.savefig(loc, bbbox_inches='tight', dpi=dpi)
+			fig.savefig(loc, dpi=dpi)
 			self.update_status('Image saved successfully')
 		except Exception as e:
 			self.update_status('ERROR: ' + str(e))
