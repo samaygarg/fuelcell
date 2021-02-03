@@ -14,7 +14,7 @@ authors:
   - name: Adam Z. Weber
     affiliation: 1
   - name: Nemanja Danilovic
-  	affiliation: 1
+    affiliation: 1
 affiliations:
  - name: Energy Storage and Distributed Resources Division, Lawrence Berkeley National Laboratory, Berkeley, CA 94720
    index: 1
