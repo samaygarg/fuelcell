@@ -2,6 +2,8 @@ import sys
 import os
 from pathlib import Path
 import logging
+import warnings
+warnings.filterwarnings("ignore", "(?s).*MATPLOTLIBDATA.*", category=UserWarning)
 logging.getLogger('matplotlib.font_manager').disabled = True
 
 import numpy as np
