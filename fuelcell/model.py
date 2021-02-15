@@ -38,6 +38,7 @@ class Datum():
 		self.hfr = None
 		self.hfr_linear = None
 		self.lfr = None
+		self.eis_current = None
 
 		# visualization
 		self.line = None
@@ -122,6 +123,9 @@ class Datum():
 	def get_lfr(self):
 		return self.lfr
 
+	def get_eis_current(self):
+		return self.eis_current
+
 	def get_line(self):
 		return self.line
 
@@ -194,6 +198,9 @@ class Datum():
 
 	def set_lfr(self, new_val):
 		self.lfr = new_val
+
+	def set_eis_current(self, new_val):
+		self.eis_current = new_val
 
 	def set_line(self, new_val):
 		self.line = new_val

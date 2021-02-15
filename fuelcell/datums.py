@@ -385,7 +385,7 @@ def lsv_process(data=None, potential_column=0, current_column=1, area=5, referen
 				utils.save_data(processed, name+'.csv', save_dir)
 	return data
 
-def eis_process(data=None, real_column=0, imag_column=1, export_data=False, save_dir='processed', **kwargs):
+def eis_process(data=None, freq_column=10, real_column=0, imag_column=1, area=5, threshold=5, min_step_length=5, export_data=False, save_dir='processed', **kwargs):
 	"""
 	Processes electrochemical impedance spectroscopy data
 
@@ -411,25 +411,47 @@ def eis_process(data=None, real_column=0, imag_column=1, export_data=False, save
 		if d.get_expt_type() == 'eis':
 			basename = d.get_name()
 			raw = d.get_raw_data()
+			### TODO: add support for GEIS and PEIS specifically, as well as frequency analysis ###
+			# freq_all = np.asarray(raw.iloc[:,freq_column])
 			real_all = np.asarray(raw.iloc[:,real_column])
 			imag_all = np.asarray(raw.iloc[:,imag_column])
+
+			# current_all = np.asarray(find_col(raw, 'current', 2))
+			# split_pts = find_steps(current_all, threshold=threshold)
+			# current_splits = split_and_filter(current_all, split_pts, min_length=min_step_length)
+			# real_splits = split_and_filter(real_all, split_pts, min_length=min_step_length)
+			# imag_splits = split_and_filter(imag_all, split_pts, min_length=min_step_length)
+			# freq_splits = split_and_filter(freq_all, split_pts, min_length=min_step_length)
 			real_splits, imag_splits = split_at_zeros(real_all, imag_all)
 			real_splits, imag_splits = drop_neg(real_splits, imag_splits)
 			i = 0
+			# for f, re, im, curr in zip(freq_splits, real_splits, imag_splits, current_splits):
 			for re, im in zip(real_splits, imag_splits):
 				re, im = np.asarray(re), np.asarray(im)
-				df = pd.DataFrame({'real':re, 'imag':im})
-				this_data = Datum(basename+'_'+str(i), df)
+				# f = np.asarray(f)
+				this_re = re[(im > 0) & (re > 0)]
+				this_im = im[(im > 0) & (re > 0)]
+				# this_f = f[(im > 0) & (re > 0)]
+				# curr = np.asarray(curr) / area
+				# mean_curr = int(np.abs(curr.mean()))
+				# df = pd.DataFrame({'freq':this_f, 'real':this_re, 'imag':this_im})
+				df = pd.DataFrame({'real':this_re, 'imag':this_im})
+				# this_data = Datum(str(mean_curr), df)
+				this_data = Datum(basename + f'_{i:02d}', df)
 				this_data.set_processed_data(df)
-				this_data.set_realcurrent_data(re)
-				this_data.set_imagcurrent_data(im)
+				# this_data.set_realcurrent_data(re)
+				# this_data.set_imagcurrent_data(im)
+				# this_data.set_eis_current(mean_curr)
 				# semicirclefit
-				popt, hfr, lfr = fit_eis_semicircle(re, im)
+				popt, hfr, lfr = fit_eis_semicircle(this_re, this_im)
 				this_data.set_semicircle_params(popt)
+				# midpt = (min(this_re) + max(this_re)) / 2
+				# lefthalf = this_im[this_im <= midpt]
+				# hfr_temp = this_re[(lefthalf == min(lefthalf))[0]]
 				this_data.set_hfr(hfr)
-				this_data.set_lfr(lfr)
+				# this_data.set_lfr(lfr)
 				#linearfit
-				popt, hfr = fit_eis_linear(re, im)
+				popt, hfr = fit_eis_linear(this_re, this_im)
 				this_data.set_linearfit_params(popt)
 				this_data.set_hfr_linear(hfr)
 				this_data.set_expt_type('eis')
@@ -559,12 +581,17 @@ def tafel_eqn(log_curr, exchg_curr, slope):
 
 ### hfr analysis ###
 def fit_eis_semicircle(real, imag):
-	popt, pcov = curve_fit(semicircle, real, imag, maxfev=10000)
-	r = popt[0]
-	h = popt[1]
-	k = popt[2]
-	hfr = -1*np.sqrt(r**2 - k**2) + h
-	lfr = np.sqrt(r**2 - k**2) + h
+	try:
+		rguess = max(imag) / 2
+		hguess = np.mean(real)
+		popt, pcov = curve_fit(semicircle, real, imag, maxfev=50000)
+		r = popt[0]
+		h = popt[1]
+	except RuntimeError as e:
+		return (0,0,0), 0, 0
+	# hfr = -1*np.sqrt(r**2 - k**2) + h
+	hfr=h-r
+	lfr = 0
 	return popt, hfr, lfr
 
 def fit_eis_linear(real, imag):
@@ -574,19 +601,24 @@ def fit_eis_linear(real, imag):
 		this_slope = np.abs((y-first_imag) / (x-first_real))
 		slopes.append(this_slope)
 	slopes = np.asarray(slopes)
-	idx = np.where(slopes >= 3)
-	real_trim, imag_trim = real[idx], imag[idx]
+	idx = np.where(slopes == max(slopes))[0][0]
+	real_trim, imag_trim = real[:idx], imag[:idx]
 	try:
 		m, b, _, _, _ = stats.linregress(real_trim, imag_trim)
 		popt = (m,b)
 		hfr = -b / m
 	except ValueError as e:
-		return None, None
+		return (0,0), 0
 	return popt, hfr
 
 def semicircle(x, r, h, k):
 	x = np.asarray(x)
-	y = np.sqrt(r**2 - (x-h)**2) + k
+	# discrim = r**2 - (x-h)**2
+	# if discrim >= 0:
+	# 	y = np.sqrt(discrim)
+	# else:
+	# 	y = 0
+	y = np.sqrt((r**2 - (x-h)**2)) + k
 	return y
 
 ### misc auxilliary functions ###
@@ -687,10 +719,10 @@ def set_datum_params(data, area, ref, rxn):
 def split_at_zeros(xvals, yvals):
 	final_x, final_y = [], []
 	this_x, this_y = [], []
-	for r, i in zip(xvals, yvals):
-		if r!=0 or i!=0:
-			this_x.append(r)
-			this_y.append(i)
+	for x, y in zip(xvals, yvals):
+		if x!=0 or y!=0:
+			this_x.append(x)
+			this_y.append(y)
 		else:
 			if len(this_x) != 0:
 				final_x.append(this_x)
