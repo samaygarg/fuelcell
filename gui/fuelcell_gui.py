@@ -881,29 +881,31 @@ class FuelcellUI(QTabWidget):
 	def saveloc_action_data(self):
 		folder = self.saveloc_txtbx_data.text()
 		self.datahandler.set_saveloc(folder)
-		self.folder_txtbx_upload.setText(folder)
+		# self.folder_txtbx_upload.setText(folder)
 
 	def process_action(self):
-		# try:
-		self.datahandler.process_data()
-		data = self.datahandler.get_data()
-		self.vishandler.set_data(data)
-		self.datatable_selector.clear()
-		if data:
-			self.datatable_selector.setEnabled(True)
-			self.data_dict = {d.get_name():d.get_processed_data() for d in data if d.get_processed_data() is not None}
-			for name in self.data_dict.keys():
-				self.datatable_selector.addItem(name)
-			self.datatable_selector.setCurrentText(list(self.data_dict.keys())[0])
-			self.update_table(list(self.data_dict.values())[0])
-			self.useexisting_chkbx_vis.setCheckState(Qt.Checked)
-		else:
-			self.datatable_selector.setEnabled(False)
-			self.useexisting_chkbx_vis.setCheckState(Qt.Unchecked)
-		self.update_status('Data processed successfully')
-		self.draw_plot_vis()
-		# except Exception as e:
-		# 	self.update_status('ERROR: ' + str(e))
+		try:
+			self.datahandler.process_data()
+			data = self.datahandler.get_data()
+			self.vishandler.set_data(data)
+			self.datatable_selector.clear()
+			if data:
+				self.datatable_selector.setEnabled(True)
+				self.data_dict = {d.get_name():d.get_processed_data() for d in data if d.get_processed_data() is not None}
+				for name in self.data_dict.keys():
+					self.datatable_selector.addItem(name)
+				self.datatable_selector.setCurrentText(list(self.data_dict.keys())[0])
+				self.update_table(list(self.data_dict.values())[0])
+				self.useexisting_chkbx_vis.setCheckState(Qt.Checked)
+			else:
+				self.datatable_selector.setEnabled(False)
+				self.useexisting_chkbx_vis.setCheckState(Qt.Unchecked)
+			self.update_status('Data processed successfully')
+			self.draw_plot_vis()
+		except AttributeError as e:
+			self.update_status('All selected files must match the selected experiment type')
+		except Exception as e:
+			self.update_status('ERROR: ' + str(e))
 
 	def datatable_selector_action(self):
 		try:
