@@ -1,5 +1,4 @@
-[![Documentation Status](https://readthedocs.org/projects/fuelcell/badge/?version=latest)](https://fuelcell.readthedocs.io/en/latest/?badge=latest) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) HTML: <a href="https://joss.theoj.org/papers/79df7852b6fedb417b625979da1f5567"><img src="https://joss.theoj.org/papers/79df7852b6fedb417b625979da1f5567/status.svg"></a>
-Markdown: [![status](https://joss.theoj.org/papers/79df7852b6fedb417b625979da1f5567/status.svg)](https://joss.theoj.org/papers/79df7852b6fedb417b625979da1f5567)
+[![Documentation Status](https://readthedocs.org/projects/fuelcell/badge/?version=latest)](https://fuelcell.readthedocs.io/en/latest/?badge=latest) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)[![status](https://joss.theoj.org/papers/79df7852b6fedb417b625979da1f5567/status.svg)](https://joss.theoj.org/papers/79df7852b6fedb417b625979da1f5567)
 
 # fuelcell
 `fuelcell` is a Python package which streamlines electrochemical data analysis. 
