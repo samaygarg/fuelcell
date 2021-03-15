@@ -15,6 +15,7 @@ authors:
     orcid: 0000-0002-0473-2298
   - name: Adam Z. Weber
     affiliation: 1
+    orcid: 0000-0002-7749-1624
   - name: Nemanja Danilovic
     affiliation: 1
 affiliations:
