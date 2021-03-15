@@ -9,8 +9,10 @@ tags:
 authors:
   - name: Samay Garg
     affiliation: "1, 2"
+    orcid: 0000-0002-9872-6429
   - name: Julie C. Fornaciari
     affiliation: "1, 2"
+    orcid: 0000-0002-0473-2298
   - name: Adam Z. Weber
     affiliation: 1
   - name: Nemanja Danilovic
