@@ -1,6 +1,9 @@
 BSD 3-Clause License
 
-The fuelcell package was produced under the Energy Conversion Group in the Energy Storage and Distributed Resources Division at Lawrence Berkeley National Laboratory, and is copyright (c) 2021 by the software owners: The Regents of the University of California, through Lawrence Berkeley National Laboratory. All rights reserved.
+The fuelcell package was produced under the Energy Conversion Group in the Energy
+Storage and Distributed Resources Division at Lawrence Berkeley National Laboratory,
+and is copyright (c) 2021 by the software owners: The Regents of the University of
+California, through Lawrence Berkeley National Laboratory. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -12,9 +15,11 @@ modification, are permitted provided that the following conditions are met:
    this list of conditions and the following disclaimer in the documentation
    and/or other materials provided with the distribution.
 
-3. Neither the name of the ECG, University of California, Lawrence Berkeley National Laboratory, U.S. Dept. of Energy, nor the names of its contributors may be used
-   to endorse or promote products derived from this software without specific
-   prior written permission.
+3. Neither the name of the ECG, University of California, Lawrence Berkeley
+	National Laboratory, U.S. Dept. of Energy, nor the names of
+	itscontributors may be used
+	to endorse or promote products derived from this software without specific
+	prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
