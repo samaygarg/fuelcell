@@ -13,7 +13,7 @@ The fuelcell library can be installed using `pip <https://pypi.org/project/fuelc
 
 Updating
 ---------
-The fuelcell library is still under development, so supdates are being made and features are being added regularly. You should ensure that you are updated to the latest version. fuelcell can be updated using pip:
+The fuelcell library is still under development, so updates are being made and features are being added regularly. You should ensure that you are updated to the latest version. fuelcell can be updated using pip:
 
 .. code-block:: bash
 
