@@ -16,7 +16,7 @@ pip install fuelcell
 ```
 
 ## GUI 
-The latest version of the standalone GUI can be downlaoded [here](https://fuelcell.readthedocs.io/en/latest/gui.html). There are separate versions for Mac and Windows operating systems.
+The latest version of the standalone GUI can be downloaded [here](https://fuelcell.readthedocs.io/en/latest/gui.html). There are separate versions for Mac and Windows operating systems.
 
 ## Documentation
 The documentation can be found at [fuelcell.readthedocs.io](https://fuelcell.readthedocs.io/en/latest/) 
@@ -25,7 +25,7 @@ The documentation can be found at [fuelcell.readthedocs.io](https://fuelcell.rea
 - `datums.py`: Data processing functions
 - `visuals.py`: Data visualization functions
 - `utils.py`: File handling and general auxilliary functions
-- `model.py`:  `Datum` class to store electrochemical data along with associated features  and expereimental parameters
+- `model.py`:  `Datum` class to store electrochemical data along with associated features and expereimental parameters
 - `fuelcell_gui.py`: Graphical user interface for interactive use
 
 ## License
